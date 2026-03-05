@@ -5,7 +5,7 @@ import logging
 import sys
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("Beast_V19_5")
+logger = logging.getLogger("Beast_V19_6")
 
 def fetch_extensive_data():
     assets = {
@@ -13,7 +13,6 @@ def fetch_extensive_data():
         "INDEX": {"코스피": "^KS11", "나스닥": "^IXIC", "S&P500": "^GSPC", "공포지수": "^VIX"},
         "CRYPTO": {"비트코인": "BTC-USD", "이더리움": "ETH-USD"},
         "COMM": {"금(Gold)": "GC=F", "은(Silver)": "SI=F", "WTI유": "CL=F", "구리": "HG=F"},
-        # 🚨 V19.5 채권 수익률(Yield) 추가 수집
         "BONDS": {"미 국채 2년물": "US2Y=X", "미 국채 10년물": "^TNX"},
         "WATCH": {"NVDL":"NVDL", "BITX":"BITX", "ETHU":"ETHU", "SOXL":"SOXL", "MSTR":"MSTR", "TQQQ":"TQQQ", "TSLA":"TSLA", "SCHD":"SCHD", "INTC":"INTC", "SNOW":"SNOW", "RIVN":"RIVN", "LABU":"LABU", "VKTX":"VKTX", "CONL":"CONL", "NVDA":"NVDA", "AVGO":"AVGO"}
     }
@@ -44,7 +43,6 @@ def fetch_extensive_data():
     return data_pool
 
 def ai_meeting_results():
-    # 🚨 V19.5 주요 거시 경제/연준 일정 (하드코딩된 팩트 일정)
     eco_events = [
         {"d": "03-06 (금)", "t": "미국 2월 고용보고서 (NFP)", "desc": "금리 인하 속도 조절의 핵심 지표. 쇼크 시 증시 요동."},
         {"d": "03-12 (목)", "t": "미국 2월 소비자물가지수 (CPI)", "desc": "인플레이션 재반등 여부 확인. 가장 중요한 매크로 이벤트."},
@@ -90,7 +88,6 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
     try:
         now = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M')
         
-        # 1. 환율/스테이블코인
         usd_krw = data.get('USDKRW=X', {'price':0, 'chg':0})
         usdt_krw = data.get('USDT_KRW_CALC', {'price':0, 'chg':0})
         usdc_krw = data.get('USDC_KRW_CALC', {'price':0, 'chg':0})
@@ -116,7 +113,6 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
             </div>
         </div>'''
 
-        # 2. 경제 일정 HTML 신설
         eco_html = ""
         for ev in eco_events:
             eco_html += f'''
@@ -126,11 +122,10 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
                 <p class="text-zinc-500 dark:text-zinc-400 text-[10px] font-bold leading-relaxed">{ev['desc']}</p>
             </div>'''
 
-        # 3. 채권 수익률(Bonds) HTML 신설
         bonds_html = ""
         bond_rules = {
-            "US2Y=X": {"name": "미 국채 2년물", "warn": "🚨 위험수위 5.0% (연준 인하 지연 시그널. 단기 자금 경색 주의)"},
-            "^TNX": {"name": "미 국채 10년물", "warn": "🚨 위험수위 4.5% (돌파 시 나스닥/빅테크 밸류에이션 하락 압력 극대화)"}
+            "US2Y=X": {"name": "미 국채 2년물", "warn": "🚨 위험수위 5.0% (연준 인하 지연 시그널)"},
+            "^TNX": {"name": "미 국채 10년물", "warn": "🚨 위험수위 4.5% (나스닥 하락 압력 극대화)"}
         }
         for sym, info in bond_rules.items():
             d = data.get(sym, {'price':0, 'chg':0, 'history':[0]*30})
@@ -146,7 +141,6 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
                 <div id="chart-container-{sym}" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-{sym}" class="w-full h-full"></div></div>
             </div>'''
 
-        # 4. 지수 및 원자재
         index_cards = ""
         for s in ["^KS11", "^IXIC", "^GSPC", "^VIX", "BTC-USD", "ETH-USD"]:
             d = data.get(s, {'name': s, 'price':0, 'chg':0, 'history': [0]*30})
@@ -225,12 +219,13 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
                     </div>
                 </div>'''
 
+        # HTML 템플릿 - 절대 끊기지 않도록 단일 블록 유지
         base_html = """
         <!DOCTYPE html>
         <html lang="ko" class="dark">
         <head>
             <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>연신내 개미펀드 V19.5</title>
+            <title>연신내 개미펀드 V19.6</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
             <style>
@@ -322,4 +317,40 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
                         chart = echarts.init(container);
                         chart.setOption({
                             grid: { top: 10, bottom: 10, left: 10, right: 10 },
-                            xAxis: { type: 'category', show: false
+                            xAxis: { type: 'category', show: false },
+                            yAxis: { type: 'value', show: false, min: 'dataMin', max: 'dataMax' },
+                            series: [{ data: allHistory[sym], type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#D4AF37', width: 2 }, areaStyle: { color: 'rgba(212, 175, 55, 0.1)' } }]
+                        });
+                    }
+                }
+            </script>
+        </body>
+        </html>
+        """
+        
+        history_json = json.dumps({sym: d.get('history', [0]*30) for sym, d in data.items()})
+        final_html = base_html.replace("__CURRENCY__", currency_html)
+        final_html = final_html.replace("__ECO_EVENTS__", eco_html)
+        final_html = final_html.replace("__INDEX__", index_cards)
+        final_html = final_html.replace("__BONDS__", bonds_html)
+        final_html = final_html.replace("__COMMODITIES__", comm_cards)
+        final_html = final_html.replace("__SUMMARY__", summary_html)
+        final_html = final_html.replace("__ULTRA_BEAST__", ultra_beast_html)
+        final_html = final_html.replace("__RECS__", rec_cards)
+        final_html = final_html.replace("__OPTIONS__", options_html)
+        final_html = final_html.replace("__EARNINGS__", earnings_html)
+        final_html = final_html.replace("__NOW__", now)
+        final_html = final_html.replace("__HISTORY__", history_json)
+
+        with open("index.html", "w", encoding="utf-8") as f:
+            f.write(final_html)
+        logger.info("V19.6 HTML successfully generated.")
+
+    except Exception as e:
+        logger.error(f"Generation Error: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    d = fetch_extensive_data()
+    eco, ub, s, r, o, e = ai_meeting_results()
+    generate_html(d, eco, ub, s, r, o, e)
