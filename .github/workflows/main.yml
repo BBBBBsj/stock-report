@@ -2,8 +2,9 @@ name: Daily Stock Report Update
 
 on:
   schedule:
-    - cron: '0 14 * * *' # 매일 한국 시간 오후 11시(미국 장 개장 전후)에 실행
-  workflow_dispatch: # 수동으로도 실행 가능하게 설정
+    # 매일 UTC 기준 23시, 7시, 14시 (한국시간 아침 8시, 오후 4시, 밤 11시)에 실행
+    - cron: '0 23,7,14 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
