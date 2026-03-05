@@ -5,16 +5,16 @@ import logging
 import sys
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("Beast_V19_0")
+logger = logging.getLogger("Beast_V19_5")
 
 def fetch_extensive_data():
     assets = {
         "CURR": {"원/달러": "USDKRW=X", "USDT": "USDT-USD", "USDC": "USDC-USD"},
         "INDEX": {"코스피": "^KS11", "나스닥": "^IXIC", "S&P500": "^GSPC", "공포지수": "^VIX"},
         "CRYPTO": {"비트코인": "BTC-USD", "이더리움": "ETH-USD"},
-        # 🚨 V19.0 원자재 추가 (금, 은, 유가, 구리)
         "COMM": {"금(Gold)": "GC=F", "은(Silver)": "SI=F", "WTI유": "CL=F", "구리": "HG=F"},
-        # 호버 차트를 띄우기 위해 UI에 노출되는 모든 대표 종목 데이터 수집
+        # 🚨 V19.5 채권 수익률(Yield) 추가 수집
+        "BONDS": {"미 국채 2년물": "US2Y=X", "미 국채 10년물": "^TNX"},
         "WATCH": {"NVDL":"NVDL", "BITX":"BITX", "ETHU":"ETHU", "SOXL":"SOXL", "MSTR":"MSTR", "TQQQ":"TQQQ", "TSLA":"TSLA", "SCHD":"SCHD", "INTC":"INTC", "SNOW":"SNOW", "RIVN":"RIVN", "LABU":"LABU", "VKTX":"VKTX", "CONL":"CONL", "NVDA":"NVDA", "AVGO":"AVGO"}
     }
     data_pool = {}
@@ -22,7 +22,7 @@ def fetch_extensive_data():
         for name, sym in group.items():
             try:
                 t = yf.Ticker(sym)
-                h = t.history(period="30d") # 차트 가시성을 위해 30일 데이터로 확장
+                h = t.history(period="30d")
                 if len(h) >= 2:
                     prices = h['Close'].round(2).tolist()
                     curr, prev = h['Close'].iloc[-1], h['Close'].iloc[-2]
@@ -33,20 +33,24 @@ def fetch_extensive_data():
             except:
                 data_pool[sym] = {"name": name, "price": 0.0, "chg": 0.0, "history": [0]*30}
     
-    # USDT/USDC 원화 환산
     krw_rate = data_pool.get("USDKRW=X", {}).get("price", 1400.0)
     
     usdt_usd = data_pool.get("USDT-USD", {}).get("price", 1.0)
-    usdt_chg = data_pool.get("USDT-USD", {}).get("chg", 0.0)
-    data_pool["USDT_KRW_CALC"] = {"name": "USDT(원)", "price": usdt_usd * krw_rate * 1.01, "chg": usdt_chg, "history": [0]}
+    data_pool["USDT_KRW_CALC"] = {"name": "USDT(원)", "price": usdt_usd * krw_rate * 1.01, "chg": data_pool.get("USDT-USD", {}).get("chg", 0.0), "history": [0]*30}
 
     usdc_usd = data_pool.get("USDC-USD", {}).get("price", 1.0)
-    usdc_chg = data_pool.get("USDC-USD", {}).get("chg", 0.0)
-    data_pool["USDC_KRW_CALC"] = {"name": "USDC(원)", "price": usdc_usd * krw_rate * 1.01, "chg": usdc_chg, "history": [0]}
+    data_pool["USDC_KRW_CALC"] = {"name": "USDC(원)", "price": usdc_usd * krw_rate * 1.01, "chg": data_pool.get("USDC-USD", {}).get("chg", 0.0), "history": [0]*30}
 
     return data_pool
 
 def ai_meeting_results():
+    # 🚨 V19.5 주요 거시 경제/연준 일정 (하드코딩된 팩트 일정)
+    eco_events = [
+        {"d": "03-06 (금)", "t": "미국 2월 고용보고서 (NFP)", "desc": "금리 인하 속도 조절의 핵심 지표. 쇼크 시 증시 요동."},
+        {"d": "03-12 (목)", "t": "미국 2월 소비자물가지수 (CPI)", "desc": "인플레이션 재반등 여부 확인. 가장 중요한 매크로 이벤트."},
+        {"d": "03-18 (수)", "t": "FOMC 기준금리 결정 & 파월 연설", "desc": "점도표 발표. 15인 위원회는 '금리 동결 및 매파적 발언' 대비 중."}
+    ]
+
     ultra_beast = {
         "title": "🌌 超越 야수 (재미용 - 초극대 변동성)",
         "ticker": "LABU, VKTX, CONL",
@@ -56,17 +60,16 @@ def ai_meeting_results():
 
     summary = {
         "반도체/AI": "엔비디아 하단 지지선 확보. 레버리지(SOXL) 공매도 잔고 임계점 도달로 숏스퀴즈 화약고 상태.",
-        "지정학/거시": "달러 강세 및 지정학적 리스크 지속. 안전자산과 코인 시장으로의 자금 양극화 현상 심화.",
+        "지정학/거시": "달러 강세 및 지정학적 리스크 지속. 국채 금리 상승세가 기술주 밸류에이션을 압박 중.",
         "빅테크": "ETF(QQQ) 자금 유입 가속화. 브로드컴 어닝 서프라이즈 이후 기술주 전반 실적 기대감 고조.",
         "코인/레버리지": "이더리움 현물 수급 폭발. 가상자산 관련주 및 레버리지 종목 변동성 극대화 포착."
     }
     
-    # 🚨 세력 형님 뒤쫓기 로직 전면 수정 (장기 횡보/눌림목 매집)
     recs = [
-        {"title": "🔥 싸나이테스트 (엄선)", "ticker": "ETHU, SOXL, MSTR", "reason": "위원회 만장일치 엄선. 변동성 상위 1% 정예. 숏스퀴즈 타점 및 광기 수급 포착.", "chart_sym": "ETHU"},
+        {"title": "🔥 싸나이테스트 (엄선)", "ticker": "ETHU, SOXL, MSTR", "reason": "변동성 상위 1% 정예. 숏스퀴즈 타점 및 광기 수급 포착.", "chart_sym": "ETHU"},
         {"title": "🏃‍♂️ 평범이의 숟가락 (엄선)", "ticker": "TQQQ, NVDA, TSLA", "reason": "추세 추종 매매 최적화. 스마트 머니 유입 및 눌림목 반등 구간.", "chart_sym": "TQQQ"},
         {"title": "🛡️ 쫄보들의 안식처 (엄선)", "ticker": "SCHD, TLT, IAU", "reason": "위원회 자산 방어 분과 엄선. 하방 경직성 및 배당 안전성 1위.", "chart_sym": "SCHD"},
-        {"title": "🕵️ 세력 형님 뒤쫓기 (엄선)", "ticker": "INTC, SNOW, RIVN", "reason": "장기 바닥권 소외주. 최근 다크풀(Dark Pool) 및 기관의 조용한 대량 매집 징후(역대급 거래량) 포착. 폭발 직전.", "chart_sym": "INTC"}
+        {"title": "🕵️ 세력 형님 뒤쫓기 (엄선)", "ticker": "INTC, SNOW, RIVN", "reason": "장기 바닥권 소외주. 최근 다크풀 및 기관 대량 매집 징후 포착. 폭발 직전.", "chart_sym": "INTC"}
     ]
     options = [
         {"t": "NVDA", "d": "03-20", "p": "135.0", "s": "콜옵션 프리미엄 과열. 135불 수렴 예상.", "chart_sym": "NVDA"},
@@ -76,26 +79,18 @@ def ai_meeting_results():
         {"t": "AVGO", "d": "03-20", "p": "140.0", "s": "어닝 서프라이즈 이후 콜옵션 대량 매집 포착.", "chart_sym": "AVGO"}
     ]
     earnings = [
-        {"date": "03-04 (발표완료)", "comps": [
-            {"n": "Broadcom", "s": "AVGO", "d": "broadcom.com", "t": "실적 발표 완료", "rec": True, "eps": "$2.05", "rev": "$19.3B", "view": "🔥 AI모멘텀 (어닝 서프라이즈)"}
-        ]},
-        {"date": "03-05 (오늘/목)", "comps": [
-            {"n": "Costco", "s": "COST", "d": "costco.com", "t": "장후", "rec": True, "eps": "$4.55", "rev": "$69.3B", "view": "🛡️ 안정적 (HOLD)"},
-            {"n": "Marvell", "s": "MRVL", "d": "marvell.com", "t": "장후", "rec": False, "eps": "$0.46", "rev": "$1.4B", "view": "가이던스 확인 요망"}
-        ]},
-        {"date": "03-09 (월)", "comps": [
-            {"n": "Oracle", "s": "ORCL", "d": "oracle.com", "t": "장후", "rec": True, "eps": "$1.38", "rev": "$13.3B", "view": "클라우드 성장 기대"}
-        ]},
-        {"date": "03-11 (수)", "comps": [
-            {"n": "Adobe", "s": "ADBE", "d": "adobe.com", "t": "장후", "rec": False, "eps": "$4.38", "rev": "$5.1B", "view": "AI 수익화 증명 필요"}
-        ]}
+        {"date": "03-04 (발표완료)", "comps": [{"n": "Broadcom", "s": "AVGO", "d": "broadcom.com", "t": "발표 완료", "rec": True, "eps": "$2.05", "rev": "$19.3B", "view": "🔥 AI모멘텀 (어닝 서프라이즈)"}]},
+        {"date": "03-05 (오늘/목)", "comps": [{"n": "Costco", "s": "COST", "d": "costco.com", "t": "장후", "rec": True, "eps": "$4.55", "rev": "$69.3B", "view": "🛡️ 안정적 (HOLD)"}, {"n": "Marvell", "s": "MRVL", "d": "marvell.com", "t": "장후", "rec": False, "eps": "$0.46", "rev": "$1.4B", "view": "가이던스 확인 요망"}]},
+        {"date": "03-09 (월)", "comps": [{"n": "Oracle", "s": "ORCL", "d": "oracle.com", "t": "장후", "rec": True, "eps": "$1.38", "rev": "$13.3B", "view": "클라우드 성장 기대"}]},
+        {"date": "03-11 (수)", "comps": [{"n": "Adobe", "s": "ADBE", "d": "adobe.com", "t": "장후", "rec": False, "eps": "$4.38", "rev": "$5.1B", "view": "AI 수익화 증명 필요"}]}
     ]
-    return ultra_beast, summary, recs, options, earnings
+    return eco_events, ultra_beast, summary, recs, options, earnings
 
-def generate_html(data, ultra_beast, summary, recs, options, earnings):
+def generate_html(data, eco_events, ultra_beast, summary, recs, options, earnings):
     try:
         now = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M')
         
+        # 1. 환율/스테이블코인
         usd_krw = data.get('USDKRW=X', {'price':0, 'chg':0})
         usdt_krw = data.get('USDT_KRW_CALC', {'price':0, 'chg':0})
         usdc_krw = data.get('USDC_KRW_CALC', {'price':0, 'chg':0})
@@ -121,7 +116,37 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
             </div>
         </div>'''
 
-        # 🚨 마우스 호버 차트 복구 (group relative 클래스 추가)
+        # 2. 경제 일정 HTML 신설
+        eco_html = ""
+        for ev in eco_events:
+            eco_html += f'''
+            <div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <p class="text-red-500 text-[10px] font-black mb-1 uppercase tracking-widest">{ev['d']}</p>
+                <p class="text-zinc-900 dark:text-white text-sm font-black mb-2">{ev['t']}</p>
+                <p class="text-zinc-500 dark:text-zinc-400 text-[10px] font-bold leading-relaxed">{ev['desc']}</p>
+            </div>'''
+
+        # 3. 채권 수익률(Bonds) HTML 신설
+        bonds_html = ""
+        bond_rules = {
+            "US2Y=X": {"name": "미 국채 2년물", "warn": "🚨 위험수위 5.0% (연준 인하 지연 시그널. 단기 자금 경색 주의)"},
+            "^TNX": {"name": "미 국채 10년물", "warn": "🚨 위험수위 4.5% (돌파 시 나스닥/빅테크 밸류에이션 하락 압력 극대화)"}
+        }
+        for sym, info in bond_rules.items():
+            d = data.get(sym, {'price':0, 'chg':0, 'history':[0]*30})
+            color = 'text-red-500' if d['chg'] > 0 else 'text-blue-500'
+            bonds_html += f'''
+            <div class="group relative bg-white dark:bg-[#1e1e1e] p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm" onmouseenter="showChart('{sym}')">
+                <div class="flex justify-between items-center mb-2">
+                    <p class="text-xs font-black text-zinc-600 dark:text-zinc-300">{info['name']}</p>
+                    <p class="{color} text-[10px] font-bold bg-zinc-100 dark:bg-black p-1 rounded">{d['chg']:+.2f}%</p>
+                </div>
+                <p class="text-2xl font-black italic text-zinc-900 dark:text-white mb-3">{d['price']:,.3f}%</p>
+                <p class="text-[10px] font-bold text-red-500 bg-red-50 dark:bg-red-500/10 p-2 rounded-lg">{info['warn']}</p>
+                <div id="chart-container-{sym}" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-{sym}" class="w-full h-full"></div></div>
+            </div>'''
+
+        # 4. 지수 및 원자재
         index_cards = ""
         for s in ["^KS11", "^IXIC", "^GSPC", "^VIX", "BTC-USD", "ETH-USD"]:
             d = data.get(s, {'name': s, 'price':0, 'chg':0, 'history': [0]*30})
@@ -134,7 +159,6 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
                 <div id="chart-container-{s}" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-{s}" class="w-full h-full"></div></div>
             </div>'''
 
-        # 🚨 원자재 카드 신설 (마우스 호버 차트 포함)
         comm_cards = ""
         for s in ["GC=F", "SI=F", "CL=F", "HG=F"]:
             d = data.get(s, {'name': s, 'price':0, 'chg':0, 'history': [0]*30})
@@ -149,17 +173,15 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
 
         summary_html = "".join([f'<div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[{k}]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">{v}</span></div>' for k,v in summary.items()])
 
-        # 🚨 초월 야수에도 대표 종목 마우스 호버 차트 추가
         ultra_beast_html = f'''
         <div class="group relative bg-zinc-900 p-8 rounded-3xl border-4 border-dashed border-red-600 shadow-2xl shadow-red-500/20 animate-pulse mb-8 text-center overflow-visible" onmouseenter="showChart('{ultra_beast['chart_sym']}')">
             <div class="absolute -right-10 -top-10 text-[200px] text-red-500 opacity-5 font-black italic">!</div>
-            <h2 class="text-3xl font-black text-white italic tracking-tighter mb-4">{ultra_beast['title']}</h2>
-            <div class="bg-red-500/20 p-4 rounded-xl mb-6 text-red-500 font-black text-xl border-2 border-red-500/30 tracking-[0.3em] inline-block">{ultra_beast['ticker']}</div>
-            <p class="text-red-500 text-4xl font-black italic leading-relaxed drop-shadow-[0_0_15px_rgba(239,68,68,0.8)] tracking-tighter">{ultra_beast['reason']}</p>
+            <h2 class="text-2xl font-black text-white italic tracking-tighter mb-4">{ultra_beast['title']}</h2>
+            <div class="bg-red-500/20 p-4 rounded-xl mb-6 text-red-500 font-black text-lg border-2 border-red-500/30 tracking-[0.3em] inline-block">{ultra_beast['ticker']}</div>
+            <p class="text-red-500 text-3xl font-black italic leading-relaxed drop-shadow-[0_0_15px_rgba(239,68,68,0.8)] tracking-tighter">{ultra_beast['reason']}</p>
             <div id="chart-container-{ultra_beast['chart_sym']}" class="absolute z-50 top-full left-1/2 -translate-x-1/2 mt-4 w-64 h-40 bg-black border border-red-500 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-{ultra_beast['chart_sym']}" class="w-full h-full"></div></div>
         </div>'''
 
-        # 🚨 싸나이테스트 등 엄선 섹터 마우스 호버 차트 추가
         rec_cards = "".join([f'''
             <div class="group relative bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-md" onmouseenter="showChart('{r['chart_sym']}')">
                 <h3 class="text-zinc-900 dark:text-white font-black text-lg mb-3 italic tracking-tighter">{r['title']}</h3>
@@ -168,7 +190,6 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
                 <div id="chart-container-{r['chart_sym']}" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-{r['chart_sym']}" class="w-full h-full"></div></div>
             </div>''' for r in recs])
 
-        # 🚨 옵션 분석에도 마우스 호버 차트 추가
         options_html = "".join([f'''
             <div class="group relative bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-visible" onmouseenter="showChart('{o['chart_sym']}')">
                 <div class="absolute right-1 top-1 text-red-500/10 text-4xl font-black">!</div>
@@ -181,7 +202,6 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
                 <div id="chart-container-{o['chart_sym']}" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-{o['chart_sym']}" class="w-full h-full"></div></div>
             </div>''' for o in options])
 
-        # 🚨 실적 발표 로고 엑박 완전 박멸 (ui-avatars 대체 API 적용)
         earnings_html = ""
         for day in earnings:
             earnings_html += f'<p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">{day["date"]}</p>'
@@ -189,10 +209,7 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
                 style = "border-[#D4AF37] bg-[#D4AF37]/5" if c['rec'] else "border-zinc-100 dark:border-zinc-800"
                 view_color = "text-[#D4AF37]" if c['rec'] else "text-zinc-500"
                 badge = '<span class="bg-[#D4AF37] text-black text-[8px] px-1 rounded font-black ml-2 animate-pulse">LONG</span>' if c['rec'] else ""
-                
-                # 로고 깨질 경우 해당 기업 이름(c['n'])의 첫 글자로 프로필 아이콘 자동 생성
                 fallback_img = f"https://ui-avatars.com/api/?name={c['n']}&background=2d3748&color=fff&size=64&bold=true"
-                
                 earnings_html += f'''
                 <div class="flex items-center justify-between p-3 rounded-xl border {style} mb-3 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
                     <div class="flex items-center gap-3">
@@ -213,7 +230,7 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
         <html lang="ko" class="dark">
         <head>
             <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>연신내 개미펀드 V19.0</title>
+            <title>연신내 개미펀드 V19.5</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
             <style>
@@ -248,14 +265,27 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
                     </div>
                 </header>
 
-                __ULTRA_BEAST__
+                <h2 class="text-[10px] font-black text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-3">
+                    <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 글로벌 매크로 & 연준(Fed) 주요 일정
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">__ECO_EVENTS__</div>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">__INDEX__</div>
                 
-                <h2 class="text-[10px] font-black text-zinc-500 mb-3 tracking-[0.3em] uppercase flex items-center gap-3">
-                    <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 원자재 (Commodities)
-                </h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">__COMMODITIES__</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div>
+                        <h2 class="text-[10px] font-black text-zinc-500 mb-3 tracking-[0.3em] uppercase flex items-center gap-3">
+                            <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 국채 금리 (Bonds) & 위험 수위
+                        </h2>
+                        <div class="grid grid-cols-1 gap-4">__BONDS__</div>
+                    </div>
+                    <div>
+                        <h2 class="text-[10px] font-black text-zinc-500 mb-3 tracking-[0.3em] uppercase flex items-center gap-3">
+                            <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 원자재 (Commodities)
+                        </h2>
+                        <div class="grid grid-cols-2 gap-4">__COMMODITIES__</div>
+                    </div>
+                </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-16">
                     <div class="lg:col-span-3">
@@ -264,6 +294,9 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
                             <h2 class="text-2xl font-black text-zinc-900 dark:text-white mb-6 italic relative z-10">🏛️ 위원회 섹터 요약</h2>
                             <div class="space-y-1 relative z-10">__SUMMARY__</div>
                         </div>
+
+                        __ULTRA_BEAST__
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">__RECS__</div>
                         <h2 class="text-[10px] font-black text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-3">
                             <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 옵션 세력 분석 & MAX PAIN (TOP 5)
@@ -289,38 +322,4 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
                         chart = echarts.init(container);
                         chart.setOption({
                             grid: { top: 10, bottom: 10, left: 10, right: 10 },
-                            xAxis: { type: 'category', show: false },
-                            yAxis: { type: 'value', show: false, min: 'dataMin', max: 'dataMax' },
-                            series: [{ data: allHistory[sym], type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#D4AF37', width: 2 }, areaStyle: { color: 'rgba(212, 175, 55, 0.1)' } }]
-                        });
-                    }
-                }
-            </script>
-        </body>
-        </html>
-        """
-        
-        history_json = json.dumps({sym: d.get('history', [0]*30) for sym, d in data.items()})
-        final_html = base_html.replace("__CURRENCY__", currency_html)
-        final_html = final_html.replace("__ULTRA_BEAST__", ultra_beast_html)
-        final_html = final_html.replace("__NOW__", now)
-        final_html = final_html.replace("__INDEX__", index_cards)
-        final_html = final_html.replace("__COMMODITIES__", comm_cards)
-        final_html = final_html.replace("__SUMMARY__", summary_html)
-        final_html = final_html.replace("__RECS__", rec_cards)
-        final_html = final_html.replace("__OPTIONS__", options_html)
-        final_html = final_html.replace("__EARNINGS__", earnings_html)
-        final_html = final_html.replace("__HISTORY__", history_json)
-
-        with open("index.html", "w", encoding="utf-8") as f:
-            f.write(final_html)
-        logger.info("V19.0 HTML successfully generated with hover charts.")
-
-    except Exception as e:
-        logger.error(f"Generation Error: {e}")
-        sys.exit(1)
-
-if __name__ == "__main__":
-    d = fetch_extensive_data()
-    ub, s, r, o, e = ai_meeting_results()
-    generate_html(d, ub, s, r, o, e)
+                            xAxis: { type: 'category', show: false
