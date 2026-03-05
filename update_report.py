@@ -5,7 +5,7 @@ import logging
 import sys
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("Beast_V20_3")
+logger = logging.getLogger("Beast_V20_4")
 
 def fetch_extensive_data():
     assets = {
@@ -13,7 +13,6 @@ def fetch_extensive_data():
         "INDEX": {"코스피": "^KS11", "나스닥": "^IXIC", "S&P500": "^GSPC", "공포지수": "^VIX"},
         "CRYPTO": {"비트코인": "BTC-USD", "이더리움": "ETH-USD"},
         "COMM": {"금(Gold)": "GC=F", "은(Silver)": "SI=F", "WTI유": "CL=F", "구리": "HG=F"},
-        # 🚨 V20.3: 에러나는 2년/3년물 버리고 연준(Fed) 공식 침체 지표인 3개월물(^IRX) 전격 도입!
         "BONDS": {"미 국채 3개월물": "^IRX", "미 국채 10년물": "^TNX"},
         "WATCH": {"NVDL":"NVDL", "BITX":"BITX", "ETHU":"ETHU", "SOXL":"SOXL", "MSTR":"MSTR", "TQQQ":"TQQQ", "TSLA":"TSLA", "SCHD":"SCHD", "INTC":"INTC", "SNOW":"SNOW", "RIVN":"RIVN", "LABU":"LABU", "VKTX":"VKTX", "CONL":"CONL", "NVDA":"NVDA", "AVGO":"AVGO"}
     }
@@ -66,7 +65,7 @@ def ai_meeting_results():
 
     summary = {
         "반도체/AI": "엔비디아 하단 지지선 확보. 레버리지(SOXL) 공매도 잔고 임계점 도달로 숏스퀴즈 화약고 상태.",
-        "지정학/거시": "달러 강세 및 지정학적 리스크 지속. 국채 금리 상승세가 기술주 밸류에이션을 압박 중.",
+        "지정학/거시": "달러 강세 및 지정학적 리스크 지속. 국채 금리 변동성이 기술주 밸류에이션을 압박 중.",
         "빅테크": "ETF(QQQ) 자금 유입 가속화. 브로드컴 어닝 서프라이즈 이후 기술주 전반 실적 기대감 고조.",
         "코인/레버리지": "이더리움 현물 수급 폭발. 가상자산 관련주 및 레버리지 종목 변동성 극대화 포착."
     }
@@ -161,7 +160,6 @@ def generate_html(data, eco_events, human_indicator, ultra_beast, summary, recs,
                 <p class="text-[10px] text-zinc-600 dark:text-zinc-400 font-bold leading-relaxed">{h['desc']}</p>
             </div>'''
 
-        # 🚨 V20.3: 10년물(^TNX) - 3개월물(^IRX) 스프레드 계산 로직 완벽 방어
         yield_10y = data.get('^TNX', {}).get('price', 0)
         yield_3m = data.get('^IRX', {}).get('price', 0)
         
@@ -278,83 +276,157 @@ def generate_html(data, eco_events, human_indicator, ultra_beast, summary, recs,
                     </div>
                 </div>'''
 
-        base_html = """
-        <!DOCTYPE html>
-        <html lang="ko" class="dark">
-        <head>
-            <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>연신내 개미펀드 V20.3</title>
-            <script src="https://cdn.tailwindcss.com"></script>
-            <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-            <style>
-                @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
-                body { font-family: 'Noto Sans KR', sans-serif; transition: background-color 0.3s; }
-                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-                .ant-logo { animation: spin 8s linear infinite; transition: transform 0.3s; filter: drop-shadow(0 0 10px rgba(212,175,55,0.4)); }
-                .ant-logo:hover { animation-play-state: paused; transform: scale(1.1); }
-            </style>
-            <script>
-                tailwind.config = { darkMode: 'class' };
-                function toggleTheme() { 
-                    const doc = document.documentElement;
-                    const btn = document.getElementById('theme-btn');
-                    if(doc.classList.contains('dark')) {
-                        doc.classList.remove('dark');
-                        btn.innerText = '다크 모드 전환';
-                    } else {
-                        doc.classList.add('dark');
-                        btn.innerText = '라이트 모드 전환';
-                    }
-                }
-            </script>
-        </head>
-        <body class="bg-zinc-50 dark:bg-[#0d0d0d] text-zinc-900 dark:text-zinc-300">
-            __CURRENCY__
-            <div class="p-6 md:p-12 max-w-7xl mx-auto">
-                <header class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-zinc-200 dark:border-zinc-900 pb-8 gap-8 gap-y-6">
-                    <div class="flex items-center gap-8">
-                        <img src="ax.png" onerror="this.onerror=null; this.src='ax.jpg'; this.onerror=function(){this.onerror=null; this.src='https://i.ibb.co/v6XkYvR/ax-removebg.png'};" class="ant-logo w-24 h-24 object-contain" alt="야수">
-                        <div>
-                            <h1 class="text-5xl font-black text-zinc-900 dark:text-white italic tracking-tighter mb-2">연신내 개미펀드</h1>
-                            <p class="text-red-500 font-black text-xs tracking-widest mb-1 uppercase">모든 투자는 본인의 책임입니다.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4 bg-white dark:bg-[#151515] p-3 rounded-xl border border-zinc-200 dark:border-zinc-900 shadow-sm">
-                        <button id="theme-btn" onclick="toggleTheme()" class="px-4 py-2 text-[10px] font-black text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-[#1e1e1e] border border-zinc-200 dark:border-zinc-800 rounded-full shadow-lg hover:bg-[#D4AF37] hover:text-black transition">라이트 모드 전환</button>
-                        <div class="text-right pl-3 border-l border-zinc-100 dark:border-zinc-800">
-                            <p class="text-[9px] text-zinc-500 font-black mb-1 tracking-widest uppercase">KST SYNC</p>
-                            <p class="text-sm font-black text-zinc-900 dark:text-white italic">__NOW__</p>
-                        </div>
-                    </div>
-                </header>
+        base_html = """<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연신내 개미펀드 V20.4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; transition: background-color 0.3s; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .ant-logo { animation: spin 8s linear infinite; transition: transform 0.3s; filter: drop-shadow(0 0 10px rgba(212,175,55,0.4)); }
+        .ant-logo:hover { animation-play-state: paused; transform: scale(1.1); }
+    </style>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+        function toggleTheme() { 
+            const doc = document.documentElement;
+            const btn = document.getElementById('theme-btn');
+            if(doc.classList.contains('dark')) {
+                doc.classList.remove('dark');
+                btn.innerText = '다크 모드 전환';
+            } else {
+                doc.classList.add('dark');
+                btn.innerText = '라이트 모드 전환';
+            }
+        }
+    </script>
+</head>
+<body class="bg-zinc-50 dark:bg-[#0d0d0d] text-zinc-900 dark:text-zinc-300">
+    __CURRENCY__
+    <div class="p-6 md:p-12 max-w-7xl mx-auto">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-zinc-200 dark:border-zinc-900 pb-8 gap-8 gap-y-6">
+            <div class="flex items-center gap-8">
+                <img src="ax.png" onerror="this.onerror=null; this.src='ax.jpg'; this.onerror=function(){this.onerror=null; this.src='https://i.ibb.co/v6XkYvR/ax-removebg.png'};" class="ant-logo w-24 h-24 object-contain" alt="야수">
+                <div>
+                    <h1 class="text-5xl font-black text-zinc-900 dark:text-white italic tracking-tighter mb-2">연신내 개미펀드</h1>
+                    <p class="text-red-500 font-black text-xs tracking-widest mb-1 uppercase">모든 투자는 본인의 책임입니다.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 bg-white dark:bg-[#151515] p-3 rounded-xl border border-zinc-200 dark:border-zinc-900 shadow-sm">
+                <button id="theme-btn" onclick="toggleTheme()" class="px-4 py-2 text-[10px] font-black text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-[#1e1e1e] border border-zinc-200 dark:border-zinc-800 rounded-full shadow-lg hover:bg-[#D4AF37] hover:text-black transition">라이트 모드 전환</button>
+                <div class="text-right pl-3 border-l border-zinc-100 dark:border-zinc-800">
+                    <p class="text-[9px] text-zinc-500 font-black mb-1 tracking-widest uppercase">KST SYNC</p>
+                    <p class="text-sm font-black text-zinc-900 dark:text-white italic">__NOW__</p>
+                </div>
+            </div>
+        </header>
 
-                <h2 class="text-[10px] font-black text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-3">
-                    <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 글로벌 매크로 & 연준(Fed) 주요 일정
+        <h2 class="text-[10px] font-black text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-3">
+            <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 글로벌 매크로 & 연준(Fed) 주요 일정
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">__ECO_EVENTS__</div>
+
+        <div class="bg-white dark:bg-[#151515] p-6 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl mb-8 relative">
+            <div class="absolute -right-5 -top-5 text-[100px] opacity-5 font-black">👥</div>
+            <h2 class="text-[11px] font-black text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-3 relative z-10">
+                <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 🧠 인간지표 & 개미 센티먼트 (커뮤니티 통합)
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">__HUMAN__</div>
+            <div class="mt-4 p-4 bg-red-50 dark:bg-red-500/10 rounded-xl border border-red-100 dark:border-red-500/20 relative z-10">
+                <p class="text-[11px] font-black text-red-500">🔥 위원회 경고: 현재 커뮤니티 전반에 롱(LONG) 환희 포착. 단기 조정(숏스퀴즈 반대 급부)에 극도로 대비하십시오.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">__INDEX__</div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div>
+                <h2 class="text-[10px] font-black text-zinc-500 mb-3 tracking-[0.3em] uppercase flex items-center gap-3">
+                    <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 국채 금리 스프레드 (시장 충격 지표)
                 </h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">__ECO_EVENTS__</div>
+                <div class="grid grid-cols-2 gap-4">__BONDS__</div>
+            </div>
+            <div>
+                <h2 class="text-[10px] font-black text-zinc-500 mb-3 tracking-[0.3em] uppercase flex items-center gap-3">
+                    <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 원자재 (Commodities)
+                </h2>
+                <div class="grid grid-cols-2 gap-4">__COMMODITIES__</div>
+            </div>
+        </div>
 
-                <div class="bg-white dark:bg-[#151515] p-6 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl mb-8 relative">
-                    <div class="absolute -right-5 -top-5 text-[100px] opacity-5 font-black">👥</div>
-                    <h2 class="text-[11px] font-black text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-3 relative z-10">
-                        <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 🧠 인간지표 & 개미 센티먼트 (커뮤니티 통합)
-                    </h2>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">__HUMAN__</div>
-                    <div class="mt-4 p-4 bg-red-50 dark:bg-red-500/10 rounded-xl border border-red-100 dark:border-red-500/20 relative z-10">
-                        <p class="text-[11px] font-black text-red-500">🔥 위원회 경고: 현재 커뮤니티 전반에 롱(LONG) 환희 포착. 단기 조정(숏스퀴즈 반대 급부)에 극도로 대비하십시오.</p>
-                    </div>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-16">
+            <div class="lg:col-span-3">
+                <div class="bg-white dark:bg-[#151515] p-8 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl mb-8 relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-5 text-[150px] font-black italic">FACT</div>
+                    <h2 class="text-2xl font-black text-zinc-900 dark:text-white mb-6 italic relative z-10">🏛️ 위원회 섹터 요약</h2>
+                    <div class="space-y-1 relative z-10">__SUMMARY__</div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">__INDEX__</div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                    <div>
-                        <h2 class="text-[10px] font-black text-zinc-500 mb-3 tracking-[0.3em] uppercase flex items-center gap-3">
-                            <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 국채 금리 스프레드 (시장 충격 지표)
-                        </h2>
-                        <div class="grid grid-cols-2 gap-4">__BONDS__</div>
-                    </div>
-                    <div>
-                        <h2 class="text-[10px] font-black text-zinc-500 mb-3 tracking-[0.3em] uppercase flex items-center gap-3">
-                            <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 원자재 (Commodities)
-                        </h2>
-                        <div class="grid grid-cols-2 gap-4">__COMMODITIES
+                __ULTRA_BEAST__
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">__RECS__</div>
+                <h2 class="text-[10px] font-black text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-3">
+                    <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 옵션 세력 분석 & MAX PAIN (TOP 5)
+                </h2>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3">__OPTIONS__</div>
+            </div>
+            
+            <div class="bg-white dark:bg-[#151515] p-6 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl h-fit relative overflow-hidden">
+                <div class="absolute -right-5 -bottom-5 text-[120px] opacity-5 font-black italic">E</div>
+                <h3 class="text-[11px] font-black text-zinc-500 mb-6 uppercase border-l-4 border-[#D4AF37] pl-4 tracking-widest relative z-10">실적 융단폭격 (7D)</h3>
+                <div class="space-y-3 relative z-10 overflow-y-auto max-h-[800px] pr-2">__EARNINGS__</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allHistory = __HISTORY__;
+        function showChart(sym) {
+            const container = document.getElementById('chart-' + sym);
+            if(!container) return;
+            let chart = echarts.getInstanceByDom(container);
+            if(!chart) {
+                chart = echarts.init(container);
+                chart.setOption({
+                    grid: { top: 10, bottom: 10, left: 10, right: 10 },
+                    xAxis: { type: 'category', show: false },
+                    yAxis: { type: 'value', show: false, min: 'dataMin', max: 'dataMax' },
+                    series: [{ data: allHistory[sym], type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#D4AF37', width: 2 }, areaStyle: { color: 'rgba(212, 175, 55, 0.1)' } }]
+                });
+            }
+        }
+    </script>
+</body>
+</html>"""
+        
+        history_json = json.dumps({sym: d.get('history', [0]*30) for sym, d in data.items()})
+        final_html = base_html.replace("__CURRENCY__", currency_html)
+        final_html = final_html.replace("__ECO_EVENTS__", eco_html)
+        final_html = final_html.replace("__HUMAN__", human_html)
+        final_html = final_html.replace("__INDEX__", index_cards)
+        final_html = final_html.replace("__BONDS__", bonds_html)
+        final_html = final_html.replace("__COMMODITIES__", comm_cards)
+        final_html = final_html.replace("__SUMMARY__", summary_html)
+        final_html = final_html.replace("__ULTRA_BEAST__", ultra_beast_html)
+        final_html = final_html.replace("__RECS__", rec_cards)
+        final_html = final_html.replace("__OPTIONS__", options_html)
+        final_html = final_html.replace("__EARNINGS__", earnings_html)
+        final_html = final_html.replace("__NOW__", now)
+        final_html = final_html.replace("__HISTORY__", history_json)
+
+        with open("index.html", "w", encoding="utf-8") as f:
+            f.write(final_html)
+        logger.info("V20.4 HTML successfully generated.")
+
+    except Exception as e:
+        logger.error(f"Generation Error: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    d = fetch_extensive_data()
+    eco, hum, ub, s, r, o, e = ai_meeting_results()
+    generate_html(d, eco, hum, ub, s, r, o, e)
