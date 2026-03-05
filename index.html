@@ -2,77 +2,180 @@
     <!DOCTYPE html>
     <html lang="ko">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>연신내 개미 펀드</title>
+        <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>연신내 개미 펀드 V8.2</title>
         <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
         <style>
-            :root { --bg: #120C07; --card: #1A120B; --text: #EAE7B1; --muted: #A3B18A; --accent: #D4AF37; --border: #3C2A21; }
-            body.light { --bg: #F3F4F6; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --accent: #B45309; --border: #D1D5DB; }
-            body { background: var(--bg); color: var(--text); transition: 0.3s; font-family: sans-serif; }
-            .card { background: var(--card); border-color: var(--border); }
-            .text-muted { color: var(--muted); } .text-accent { color: var(--accent); }
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+            body { background-color: #1e1e1e; color: #c4c4c4; font-family: 'Inter', sans-serif; transition: 0.5s; }
+            body.light { background-color: #f5f5f5; color: #1a1a1a; }
+            body.light .bg-[#2d2d2d] { background-color: #ffffff; border-color: #ddd; }
+            body.light .text-white { color: #000; }
+            
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            .ant-logo { width: 80px; height: 80px; object-fit: contain; animation: spin 15s linear infinite; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
         </style>
     </head>
-    <body>
-        <div class="max-w-6xl mx-auto p-4 md:p-8">
-            <header class="flex flex-col md:flex-row justify-between mb-8 border-b border-zinc-800 pb-4 gap-4">
-                <div><h1 class="text-4xl font-black text-accent">🐜 연신내 개미 펀드</h1><p class="text-muted font-bold mt-1">GLOBAL MACRO REPORT V4.0</p></div>
-                <div class="flex gap-4 items-center">
-                    <button onclick="toggleTheme()" class="card px-4 py-2 rounded-full border font-bold shadow-lg">🌗 테마 전환</button>
-                    <div class="card p-2 border text-right text-xs"><p class="text-muted">Last Update (KST)</p><p class="font-bold">2026-03-05 14:45:03</p></div>
+    <body class="p-4 md:p-10">
+        <div class="max-w-7xl mx-auto">
+            <header class="flex justify-between items-center mb-12 border-b border-zinc-800 pb-8">
+                <div class="flex items-center gap-6">
+                    <img src="https://i.ibb.co/v6XkYvR/ax-removebg.png" class="ant-logo" alt="Wild Ant">
+                    <div>
+                        <h1 class="text-4xl font-black text-white italic tracking-tighter uppercase">Yeonsinnae Ant Fund</h1>
+                        <p class="text-zinc-500 font-black text-[10px] mt-1 tracking-[0.4em]">15 AI AGENTS QUANT TERMINAL V8.2</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="document.body.classList.toggle('light')" class="bg-[#2d2d2d] border border-zinc-700 px-5 py-2 rounded-full text-[10px] font-black uppercase shadow-lg">Theme Switch</button>
+                    <div class="text-right"><p class="text-[10px] text-zinc-500 font-black">KST UPDATE</p><p class="text-sm font-black text-white">2026-03-05 15:14</p></div>
                 </div>
             </header>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="card p-4 rounded-xl border flex flex-col items-center shadow-2xl">
-                    <p class="text-muted font-bold mb-2">공포 탐욕 나침반</p>
-                    <div id="g" style="width:100%;height:180px"></div>
-                    <p class="text-2xl font-black">탐욕</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-12">
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">KOSPI</p>
+            <p class="text-md font-black text-[#c4c4c4]">5,680.7</p>
+            <p class="text-[11px] font-bold text-red-500">+11.53%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 56.73576015702498%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">나스닥</p>
+            <p class="text-md font-black text-[#c4c4c4]">22,807.5</p>
+            <p class="text-[11px] font-bold text-red-500">+1.29%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 45.49126120103828%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">S&P500</p>
+            <p class="text-md font-black text-[#c4c4c4]">6,869.5</p>
+            <p class="text-[11px] font-bold text-red-500">+0.78%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 43.92441618418958%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">VIX</p>
+            <p class="text-md font-black text-[#c4c4c4]">21.1</p>
+            <p class="text-[11px] font-bold text-blue-500">-10.27%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 59.124089260750125%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">미10년국채</p>
+            <p class="text-md font-black text-[#c4c4c4]">4.1</p>
+            <p class="text-[11px] font-bold text-red-500">+0.59%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 39.59276847958125%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">환율(원/달러)</p>
+            <p class="text-md font-black text-[#c4c4c4]">1,468.6</p>
+            <p class="text-[11px] font-bold text-blue-500">-0.98%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 63.62471789670513%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">달러인덱스</p>
+            <p class="text-md font-black text-[#c4c4c4]">99.1</p>
+            <p class="text-[11px] font-bold text-red-500">+0.35%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-red-500 h-1 rounded-full" style="width: 77.17104864602896%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">비트코인</p>
+            <p class="text-md font-black text-[#c4c4c4]">72,066.7</p>
+            <p class="text-[11px] font-bold text-red-500">+5.52%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 63.350021723254976%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">금</p>
+            <p class="text-md font-black text-[#c4c4c4]">5,162.6</p>
+            <p class="text-[11px] font-bold text-red-500">+0.83%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 61.16458108661314%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">원유</p>
+            <p class="text-md font-black text-[#c4c4c4]">77.7</p>
+            <p class="text-[11px] font-bold text-red-500">+4.02%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-red-500 h-1 rounded-full" style="width: 90.31556759599577%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">반도체</p>
+            <p class="text-md font-black text-[#c4c4c4]">341.5</p>
+            <p class="text-[11px] font-bold text-red-500">+2.02%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 37.67177725723351%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">테크</p>
+            <p class="text-md font-black text-[#c4c4c4]">139.8</p>
+            <p class="text-[11px] font-bold text-red-500">+1.70%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 43.268797868360785%"></div></div>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">에너지</p>
+            <p class="text-md font-black text-[#c4c4c4]">56.2</p>
+            <p class="text-[11px] font-bold text-blue-500">-0.58%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-1"><div class="bg-zinc-600 h-1 rounded-full" style="width: 58.32185951427966%"></div></div>
+        </div>
+        </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <div class="lg:col-span-2 bg-[#2d2d2d] p-8 rounded-3xl border border-zinc-800 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-4 right-8 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[10px] font-black text-green-500">AGENTS CONVENE</span></div>
+                    <h2 class="text-2xl font-black text-white mb-6 uppercase italic">🏛️ 15인 위원회 합동 전략 회의록</h2>
+                    <div class="space-y-6">
+                        <div class="bg-black/20 p-5 rounded-2xl border border-white/5 shadow-inner">
+                            <p class="text-[10px] text-zinc-500 font-black mb-2 uppercase tracking-widest italic border-b border-zinc-800 pb-1 inline-block">Liquidity Flow</p>
+                            <p class="text-sm text-zinc-200 leading-relaxed font-bold"><strong>[유동성 포착]</strong> 비트코인의 일부 수익 실현 자금이 나스닥 반도체 및 에너지 섹터로 순환매되는 <strong>통계적 시그널</strong>이 감지되었습니다.</p>
+                        </div>
+                        <div class="bg-red-500/5 p-5 rounded-2xl border border-red-500/20">
+                            <p class="text-[10px] text-red-500 font-black mb-2 uppercase tracking-widest">Psychological Warning</p>
+                            <p class="text-sm text-red-200 leading-relaxed font-bold">⚠️ <strong>트레이딩 코치:</strong> '손실 회피 편향'을 경계하세요. 현재 지표는 양호하나 심리적 과열이 감지되므로 기계적인 익절 라인 설정이 필수입니다.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card p-6 rounded-xl border md:col-span-2 shadow-2xl">
-                    <h2 class="text-xl font-bold text-accent mb-4 border-b border-zinc-800 pb-2">📊 AI 에이전트 긴급 회의록</h2>
-                    <p class="mb-3 text-sm"><strong>📈 유동성 분석:</strong> 국내 박스권 횡보 중이며 미국 기술주 중심의 쏠림이 강합니다.</p>
-                    <p class="mb-3 text-sm"><strong>🌍 지정학 리스크:</strong> 지정학 리스크가 유가에 영향을 줄 수 있으니 주의하세요.</p>
-                    <p class="text-red-500 font-bold text-sm bg-red-500/10 p-2 rounded">✅ 시장 특이사항 없음</p>
+                <div class="bg-[#2d2d2d] p-8 rounded-3xl border border-zinc-800 shadow-2xl flex flex-col justify-between">
+                    <h3 class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-[0.2em] border-l-2 border-zinc-600 pl-3">Risk Panel</h3>
+                    <div class="space-y-6">
+                        <div class="space-y-2"><div class="flex justify-between text-[10px] font-black"><span>VAR (VALUE AT RISK)</span><span class="text-blue-500 italic font-bold">STABLE</span></div><div class="w-full bg-zinc-800 h-1.5 rounded-full"><div class="bg-blue-500 h-1.5 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]" style="width: 32%"></div></div></div>
+                        <div class="space-y-2"><div class="flex justify-between text-[10px] font-black"><span>MARGIN CALL PROBABILITY</span><span class="text-green-500 italic font-bold">LOW</span></div><div class="w-full bg-zinc-800 h-1.5 rounded-full"><div class="bg-green-500 h-1.5 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.5)]" style="width: 14%"></div></div></div>
+                        <div class="space-y-2"><div class="flex justify-between text-[10px] font-black"><span>SENTIMENT OVERHEAT</span><span class="text-yellow-500 italic font-bold">NORMAL</span></div><div class="w-full bg-zinc-800 h-1.5 rounded-full"><div class="bg-yellow-500 h-1.5 rounded-full shadow-[0_0_8px_rgba(234,179,8,0.5)]" style="width: 58%"></div></div></div>
+                    </div>
                 </div>
             </div>
 
-            <h2 class="text-muted font-bold mb-4 border-b border-zinc-800 pb-1 uppercase text-xs tracking-widest">🌐 글로벌 증시 지표</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-10"><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">KOSPI (한국)</p><p class="text-xl font-bold font-black">5,657.89</p><p class="text-red-500 font-bold text-xs font-black">+11.08% (RSI 56.4)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">Nikkei (일본)</p><p class="text-xl font-bold font-black">55,540.09</p><p class="text-red-500 font-bold text-xs font-black">+2.39% (RSI 40.0)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">Shanghai (중국)</p><p class="text-xl font-bold ">4,122.21</p><p class="text-red-500 font-bold text-xs ">+0.97% (RSI 56.2)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">STOXX50 (유럽)</p><p class="text-xl font-bold font-black">5,870.92</p><p class="text-red-500 font-bold text-xs font-black">+1.72% (RSI 41.7)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">S&P 500 (미국)</p><p class="text-xl font-bold ">6,869.50</p><p class="text-red-500 font-bold text-xs ">+0.78% (RSI 43.9)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">NASDAQ (미국)</p><p class="text-xl font-bold ">22,807.48</p><p class="text-red-500 font-bold text-xs ">+1.29% (RSI 45.5)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">VIX (공포지수)</p><p class="text-xl font-bold font-black">21.15</p><p class="text-blue-500 font-bold text-xs font-black">-10.27% (RSI 59.1)</p></div></div>
-
-            <h2 class="text-muted font-bold mb-4 border-b border-zinc-800 pb-1 uppercase text-xs tracking-widest">🪙 암호화폐 & 원자재</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3"><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">Bitcoin</p><p class="text-xl font-bold font-black">72,384.55</p><p class="text-red-500 font-bold text-xs font-black">+5.99% (RSI 63.9)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">Ethereum</p><p class="text-xl font-bold font-black">2,115.14</p><p class="text-red-500 font-bold text-xs font-black">+6.68% (RSI 60.0)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">Gold (금)</p><p class="text-xl font-bold ">5,176.70</p><p class="text-red-500 font-bold text-xs ">+1.10% (RSI 61.7)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">Silver (은)</p><p class="text-xl font-bold font-black">84.60</p><p class="text-red-500 font-bold text-xs font-black">+2.37% (RSI 59.9)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">WTI Crude (원유)</p><p class="text-xl font-bold font-black">77.66</p><p class="text-red-500 font-bold text-xs font-black">+4.02% (RSI 90.3)</p></div><div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">Copper (구리)</p><p class="text-xl font-bold ">5.90</p><p class="text-red-500 font-bold text-xs ">+0.79% (RSI 55.3)</p></div></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-zinc-500 transition shadow-xl">
+            <p class="text-[#D4AF37] font-black text-[10px] mb-2 italic tracking-widest uppercase underline">Agent Selection</p>
+            <p class="text-white font-black text-xl mb-2">NVDA / SOXL</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-medium">기술적 분석가: RSI 60대 안착. 데이터 사이언티스트: 비정형 데이터 내 'AI 수요' 키워드 폭증. 야수의 심장으로 진입 가능한 구간.</p>
         </div>
-
-        <script>
-            function toggleTheme() {
-                document.body.classList.toggle('light');
-                const isLight = document.body.classList.contains('light');
-                localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            }
-            
-            // 로드 시 테마 복구 (기본 다크)
-            if (localStorage.getItem('theme') === 'light') {
-                document.body.classList.add('light');
-            }
-
-            var m = echarts.init(document.getElementById('g'));
-            var scoreVal = 47;
-            m.setOption({
-                series: [{
-                    type: 'gauge', startAngle: 180, endAngle: 0, min: 0, max: 100,
-                    itemStyle: { color: scoreVal < 40 ? '#EF4444' : '#16A34A' },
-                    progress: { show: true, width: 12 }, pointer: { show: false },
-                    axisLine: { lineStyle: { width: 12, color: [[1, 'rgba(128,128,128,0.1)']] } },
-                    axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false },
-                    detail: { valueAnimation: true, formatter: '{value}', color: 'inherit', fontSize: 32, fontWeight: '900', offsetCenter: [0, '-10%'] },
-                    data: [{ value: scoreVal }]
-                }]
-            });
-            window.addEventListener('resize', () => m.resize());
-        </script>
+        
+        <div class="bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-zinc-500 transition shadow-xl">
+            <p class="text-[#D4AF37] font-black text-[10px] mb-2 italic tracking-widest uppercase underline">Agent Selection</p>
+            <p class="text-white font-black text-xl mb-2">QQQ / VOO</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-medium">거시경제학자: 금리 동결 시나리오 우세. 가치투자자: 주요 빅테크 실적 가이던스 상향 조정. 시장 평균 수익률 추종 전략 유효.</p>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-zinc-500 transition shadow-xl">
+            <p class="text-[#D4AF37] font-black text-[10px] mb-2 italic tracking-widest uppercase underline">Agent Selection</p>
+            <p class="text-white font-black text-xl mb-2">TLT / IAU</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-medium">리스크 관리자: VaR 모델상 변동성 확대 경고. 컴플라이언스: 자산 배분 원칙 준수 필요. 하방 경직성이 강한 채권과 금으로 헷지.</p>
+        </div>
+        
+        <div class="bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-zinc-500 transition shadow-xl">
+            <p class="text-[#D4AF37] font-black text-[10px] mb-2 italic tracking-widest uppercase underline">Agent Selection</p>
+            <p class="text-white font-black text-xl mb-2">TSLA / MSTR</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-medium">수급 추적자: 대규모 숏커버링 임계점 도달. 행동경제학 코치: 과도한 공포에 의한 저점 매수세 유입 포착. 세력의 역발상 매집 구간.</p>
+        </div>
+        </div>
+        </div>
     </body>
     </html>
     
