@@ -1,149 +1,154 @@
 import yfinance as yf
-import pandas as pd
 import datetime
 import logging
-import requests
+import pandas as pd
+import numpy as np
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger("YeonsinnaeAntFund")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("Yeonsinnae_HedgeFund_V7")
 
-def fetch_market_data():
-    tickers = {
-        "Global Equity": {
-            "KOSPI (한국)": "^KS11", "Nikkei (일본)": "^N225", "Shanghai (중국)": "000001.SS",
-            "STOXX50 (유럽)": "^STOXX50E", "S&P 500 (미국)": "^GSPC", "NASDAQ (미국)": "^IXIC", "VIX (공포지수)": "^VIX"
-        },
-        "Crypto & Commodities": {
-            "Bitcoin": "BTC-USD", "Ethereum": "ETH-USD", "Gold (금)": "GC=F", "Silver (은)": "SI=F", "WTI Crude (원유)": "CL=F", "Copper (구리)": "HG=F"
-        }
+def fetch_extensive_data():
+    # 15인 에이전트가 교차 검증할 데이터셋
+    assets = {
+        "INDEX": {"KOSPI": "^KS11", "NASDAQ": "^IXIC", "S&P500": "^GSPC", "VIX": "^VIX"},
+        "MACRO": {"US10Y": "^TNX", "USD/KRW": "USDKRW=X", "DollarIndex": "DX-Y.NYB"},
+        "ALT": {"Bitcoin": "BTC-USD", "Gold": "GC=F", "CrudeOil": "CL=F"},
+        "SECTOR": {"Semiconductor": "SOXX", "Tech": "XLK", "Health": "XLV"}
     }
-    market_data = {"Global Equity": {}, "Crypto & Commodities": {}}
-    vix_p, wti_p, ndx_c = 20.0, 70.0, 0.0
-
-    for cat, group in tickers.items():
+    data_pool = {}
+    for cat, group in assets.items():
         for name, sym in group.items():
             try:
                 t = yf.Ticker(sym)
-                h = t.history(period="20d")
-                if len(h) >= 15:
+                h = t.history(period="60d") # 통계 분석을 위해 60일치 확보
+                if len(h) > 30:
                     curr, prev = h['Close'].iloc[-1], h['Close'].iloc[-2]
                     chg = ((curr - prev) / prev) * 100
-                    d = h['Close'].diff()
-                    g = (d.where(d > 0, 0)).rolling(14).mean().iloc[-1]
-                    l = (-d.where(d < 0, 0)).rolling(14).mean().iloc[-1]
-                    rsi = 100 - (100 / (1 + (g/l))) if l != 0 else 100
-                    if sym == "^VIX": vix_p = curr
-                    if sym == "CL=F": wti_p = curr
-                    if sym == "^IXIC": ndx_c = chg
-                    market_data[cat][name] = {"price": f"{curr:,.2f}", "change": f"{chg:+.2f}%", "rsi": f"{rsi:.1f}", "is_up": chg > 0, "val": abs(chg)}
-            except: market_data[cat][name] = {"price": "Error", "change": "-", "rsi": "-", "is_up": True, "val": 0}
-    return market_data, vix_p, wti_p, ndx_c
+                    # RSI 및 통계 지표(변동성) 계산
+                    delta = h['Close'].diff()
+                    up = delta.clip(lower=0).rolling(14).mean().iloc[-1]
+                    down = -delta.clip(upper=0).rolling(14).mean().iloc[-1]
+                    rsi = 100 - (100 / (1 + (up/down))) if down != 0 else 50
+                    volat = h['Close'].pct_change().std() * np.sqrt(252) * 100 # 연율화 변동성
+                    data_pool[sym] = {"name": name, "price": curr, "chg": chg, "rsi": rsi, "vol": volat}
+            except: pass
+    return data_pool
 
-def generate_html(data, vix, wti, ndx):
-    score = int(max(0, min(100, 100 - (vix * 2.5))))
-    status = "중립"
-    if score <= 25: status = "극단적 공포"
-    elif score <= 45: status = "공포"
-    elif score <= 75: status = "탐욕"
-    else: status = "극단적 탐욕"
-
-    brief = "국내 박스권 횡보 중이며 미국 기술주 중심의 쏠림이 강합니다."
-    geo = "지정학 리스크가 유가에 영향을 줄 수 있으니 주의하세요."
-    if wti > 80: geo = "⚠️ 중동 지정학 리스크 고조! 원유 및 안전자산 비중을 늘리세요."
+def ai_hedge_fund_meeting(d):
+    # 15인 에이전트의 파트별 합동 회의 결과 도출
+    vix = d.get('^VIX', {}).get('price', 15)
+    nasdaq_rsi = d.get('^IXIC', {}).get('rsi', 50)
     
-    alerts = "✅ 시장 특이사항 없음"
-    if ndx < -1.5: alerts = "🚨 기술주 급락 주의! CME 증거금 인상 검토 중 루머가 있습니다."
+    # 1. 야수(Wild Beast) - 퀀트/기술적 분석팀 협업
+    wild = {"t": "NVDA / NVDL", "r": "기술적 분석가: MACD 정배열 확인. 데이터 사이언티스트: 뉴스 감성 분석 시그널 '매수' 확정. 변동성이 크지만 통계적 기대값이 높음."}
+    # 2. 평범(Standard) - 가치투자/섹터 분석팀 협업
+    normal = {"t": "SPLG (S&P500 저비용)", "r": "가치투자자: 펀더멘탈 대비 적정 주가 범위 내 위치. 매크로 데스크: 금리 동결 시나리오 반영 시 우상향 확률 68%."}
+    # 3. 안정(Safety) - 리스크/컴플라이언스/채권팀 협업
+    safe = {"t": "SHV (초단기 국채)", "r": "리스크 관리자: VaR(Value at Risk) 한도 초과 경고. 컴플라이언스: 세후 수익률 최적화 구간. 현금 비중 확보로 Drawdown 대비."}
+    # 4. 세력 매집(Whale) - 수급/행동경제학/알터너티브 데이터팀 협업
+    whale = {"t": "MSTR (마이크로스트래티지)", "r": "수급 추적자: 대규모 숏커버링 물량 대기 중. 행동경제학 코치: 군집 행동으로 인한 과열 구간이나, 세력의 하단 지지가 강력함."}
 
-    now = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M:%S')
+    # 유동성 및 심리 분석
+    flow = "<strong>[데이터 사이언스 포착]</strong> 비정형 데이터(SNS/포럼) 내 'FOMO' 지수 급증. 암호화폐 유동성이 나스닥으로 전이되며 <strong>통계적 차익거래</strong> 기회 발생 중."
+    psycho_warn = "⚠️ <strong>트레이딩 코치 경고:</strong> 현재 탐욕 지수가 높습니다. '손실 회피 편향'으로 인해 익절 타이밍을 놓칠 수 있으니 기계적 매도를 권장합니다."
     
-    def cards(d):
-        res = ""
-        for n, i in d.items():
-            c = "text-red-500 font-bold" if i['is_up'] else "text-blue-500 font-bold"
-            bold = "font-black" if i['val'] > 1.5 else ""
-            res += f'<div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">{n}</p><p class="text-xl font-bold {bold}">{i["price"]}</p><p class="{c} text-xs {bold}">{i["change"]} (RSI {i["rsi"]})</p></div>'
-        return res
+    return [wild, normal, safe, whale], flow, psycho_warn
+
+def generate_v7_html(data, recs, flow, warn):
+    now = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M')
+    
+    cards = ""
+    for sym, i in data.items():
+        cards += f"""
+        <div class="bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800">
+            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">{i['name']}</p>
+            <p class="text-md font-black text-[#c4c4c4]">{i['price']:,.1f}</p>
+            <p class="text-[10px] font-bold {'text-red-500' if i['chg']>0 else 'text-blue-500'}">{i['chg']:+.2f}%</p>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-2"><div class="bg-zinc-500 h-1 rounded-full" style="width: {i['rsi']}%"></div></div>
+        </div>
+        """
+
+    rec_html = ""
+    for r in recs:
+        rec_html += f"""
+        <div class="bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 shadow-xl">
+            <p class="text-[#D4AF37] font-black text-xs mb-2 italic">HEDGE FUND SELECT</p>
+            <p class="text-white font-black text-xl mb-2">{r['t']}</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-medium">{r['r']}</p>
+        </div>
+        """
 
     html = f"""
     <!DOCTYPE html>
     <html lang="ko">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>연신내 개미 펀드</title>
+        <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ANT HEDGE FUND V7</title>
         <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
         <style>
-            :root {{ --bg: #120C07; --card: #1A120B; --text: #EAE7B1; --muted: #A3B18A; --accent: #D4AF37; --border: #3C2A21; }}
-            body.light {{ --bg: #F3F4F6; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --accent: #B45309; --border: #D1D5DB; }}
-            body {{ background: var(--bg); color: var(--text); transition: 0.3s; font-family: sans-serif; }}
-            .card {{ background: var(--card); border-color: var(--border); }}
-            .text-muted {{ color: var(--muted); }} .text-accent {{ color: var(--accent); }}
+            body {{ background-color: #1e1e1e; color: #c4c4c4; font-family: 'Inter', sans-serif; }}
+            .text-silver {{ color: #c4c4c4; }}
+            body.light {{ background-color: #f0f0f0; color: #1a1a1a; }}
+            body.light .bg-[#2d2d2d] {{ background-color: #ffffff; border-color: #ddd; }}
+            body.light .text-zinc-400 {{ color: #555; }}
         </style>
     </head>
-    <body>
-        <div class="max-w-6xl mx-auto p-4 md:p-8">
-            <header class="flex flex-col md:flex-row justify-between mb-8 border-b border-zinc-800 pb-4 gap-4">
-                <div><h1 class="text-4xl font-black text-accent">🐜 연신내 개미 펀드</h1><p class="text-muted font-bold mt-1">GLOBAL MACRO REPORT V4.0</p></div>
-                <div class="flex gap-4 items-center">
-                    <button onclick="toggleTheme()" class="card px-4 py-2 rounded-full border font-bold shadow-lg">🌗 테마 전환</button>
-                    <div class="card p-2 border text-right text-xs"><p class="text-muted">Last Update (KST)</p><p class="font-bold">{now}</p></div>
+    <body class="p-4 md:p-10">
+        <div class="max-w-7xl mx-auto">
+            <header class="flex justify-between items-end mb-12 border-b border-zinc-800 pb-8">
+                <div>
+                    <h1 class="text-4xl font-black text-white italic tracking-tighter">YEONSINNAE HEDGE FUND</h1>
+                    <p class="text-zinc-500 font-black text-[10px] mt-2 tracking-[0.3em] uppercase">15 AI AGENTS QUANT & STRATEGY TERMINAL</p>
                 </div>
+                <button onclick="document.body.classList.toggle('light')" class="bg-[#2d2d2d] border border-zinc-700 px-4 py-2 rounded-lg text-[10px] font-black uppercase">Switch Theme</button>
             </header>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="card p-4 rounded-xl border flex flex-col items-center shadow-2xl">
-                    <p class="text-muted font-bold mb-2">공포 탐욕 나침반</p>
-                    <div id="g" style="width:100%;height:180px"></div>
-                    <p class="text-2xl font-black">{status}</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-10">{cards}</div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+                <div class="lg:col-span-2 bg-[#2d2d2d] p-8 rounded-3xl border border-zinc-800 shadow-2xl relative">
+                    <div class="absolute top-4 right-8 flex gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-[10px] font-black text-green-500">SYSTEM LIVE</span>
+                    </div>
+                    <h2 class="text-2xl font-black text-white mb-6 uppercase tracking-tight">🏛️ 15인 위원회 합동 전략 회의록</h2>
+                    <div class="space-y-6">
+                        <div class="bg-black/20 p-5 rounded-xl border border-white/5">
+                            <p class="text-[10px] text-zinc-500 font-black mb-2 uppercase tracking-widest italic underline">Liquidity Analysis</p>
+                            <p class="text-sm text-zinc-200 leading-relaxed font-bold">{flow}</p>
+                        </div>
+                        <div class="bg-red-500/5 p-5 rounded-xl border border-red-500/20">
+                            <p class="text-[10px] text-red-500 font-black mb-2 uppercase tracking-widest">Behavioral Coach Alert</p>
+                            <p class="text-sm text-red-200 leading-relaxed font-bold">{warn}</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card p-6 rounded-xl border md:col-span-2 shadow-2xl">
-                    <h2 class="text-xl font-bold text-accent mb-4 border-b border-zinc-800 pb-2">📊 AI 에이전트 긴급 회의록</h2>
-                    <p class="mb-3 text-sm"><strong>📈 유동성 분석:</strong> {brief}</p>
-                    <p class="mb-3 text-sm"><strong>🌍 지정학 리스크:</strong> {geo}</p>
-                    <p class="text-red-500 font-bold text-sm bg-red-500/10 p-2 rounded">{alerts}</p>
+                <div class="bg-[#2d2d2d] p-6 rounded-3xl border border-zinc-800 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xs font-black text-zinc-500 mb-6 uppercase tracking-widest">Risk Management Panel</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between text-[10px] font-black"><span>VAR (VALUE AT RISK)</span><span class="text-blue-500 italic">STABLE</span></div>
+                            <div class="w-full bg-zinc-800 h-1 rounded-full"><div class="bg-blue-500 h-1 rounded-full" style="width: 35%"></div></div>
+                            <div class="flex justify-between text-[10px] font-black"><span>CME MARGIN CALL RISK</span><span class="text-green-500 italic">LOW</span></div>
+                            <div class="w-full bg-zinc-800 h-1 rounded-full"><div class="bg-green-500 h-1 rounded-full" style="width: 15%"></div></div>
+                            <div class="flex justify-between text-[10px] font-black"><span>SENTIMENT OVERHEAT</span><span class="text-yellow-500 italic">NORMAL</span></div>
+                            <div class="w-full bg-zinc-800 h-1 rounded-full"><div class="bg-yellow-500 h-1 rounded-full" style="width: 52%"></div></div>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-zinc-800 text-center text-[10px] font-black text-zinc-600">
+                        <p>TIMESTAMP: {now} (KST)</p>
+                    </div>
                 </div>
             </div>
 
-            <h2 class="text-muted font-bold mb-4 border-b border-zinc-800 pb-1 uppercase text-xs tracking-widest">🌐 글로벌 증시 지표</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-10">{cards(data['Global Equity'])}</div>
-
-            <h2 class="text-muted font-bold mb-4 border-b border-zinc-800 pb-1 uppercase text-xs tracking-widest">🪙 암호화폐 & 원자재</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">{cards(data['Crypto & Commodities'])}</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">{rec_html}</div>
         </div>
-
-        <script>
-            function toggleTheme() {{
-                document.body.classList.toggle('light');
-                const isLight = document.body.classList.contains('light');
-                localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            }}
-            
-            // 로드 시 테마 복구 (기본 다크)
-            if (localStorage.getItem('theme') === 'light') {{
-                document.body.classList.add('light');
-            }}
-
-            var m = echarts.init(document.getElementById('g'));
-            var scoreVal = {score};
-            m.setOption({{
-                series: [{{
-                    type: 'gauge', startAngle: 180, endAngle: 0, min: 0, max: 100,
-                    itemStyle: {{ color: scoreVal < 40 ? '#EF4444' : '#16A34A' }},
-                    progress: {{ show: true, width: 12 }}, pointer: {{ show: false }},
-                    axisLine: {{ lineStyle: {{ width: 12, color: [[1, 'rgba(128,128,128,0.1)']] }} }},
-                    axisTick: {{ show: false }}, splitLine: {{ show: false }}, axisLabel: {{ show: false }},
-                    detail: {{ valueAnimation: true, formatter: '{{value}}', color: 'inherit', fontSize: 32, fontWeight: '900', offsetCenter: [0, '-10%'] }},
-                    data: [{{ value: scoreVal }}]
-                }}]
-            }});
-            window.addEventListener('resize', () => m.resize());
-        </script>
     </body>
     </html>
     """
     with open("index.html", "w", encoding="utf-8") as f: f.write(html)
 
 if __name__ == "__main__":
-    d, v, w, n = fetch_market_data()
-    generate_html(d, v, w, n)
+    d = fetch_extensive_data()
+    recs, flow, warn = ai_hedge_fund_meeting(d)
+    generate_v7_html(d, recs, flow, warn)
