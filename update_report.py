@@ -5,7 +5,7 @@ import logging
 import sys
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("Beast_V18_2")
+logger = logging.getLogger("Beast_V18_4")
 
 def fetch_extensive_data():
     assets = {
@@ -29,7 +29,7 @@ def fetch_extensive_data():
             except:
                 data_pool[sym] = {"name": name, "price": 0.0, "chg": 0.0, "history": [0,0]}
     
-    # 🚨 USDT/USDC 원화 환산 및 'history' 에러 완벽 해결
+    # USDT/USDC 원화 환산
     krw_rate = data_pool.get("USDKRW=X", {}).get("price", 1400.0)
     
     usdt_usd = data_pool.get("USDT-USD", {}).get("price", 1.0)
@@ -46,7 +46,7 @@ def ai_meeting_results():
     summary = {
         "반도체/AI": "엔비디아 하단 지지선 확보. 레버리지(SOXL) 공매도 잔고 임계점 도달로 숏스퀴즈 화약고 상태.",
         "지정학/거시": "달러 강세 및 지정학적 리스크 지속. 안전자산과 코인 시장으로의 자금 양극화 현상 심화.",
-        "빅테크": "ETF(QQQ) 자금 유입 가속화. 이번 주 실적 발표 기업 가이던스 상향 기대감 선반영.",
+        "빅테크": "ETF(QQQ) 자금 유입 가속화. 시장은 브로드컴 실적 호조에 이어 다음 타자들을 주시 중.",
         "코인/레버리지": "이더리움 현물 수급 폭발. 가상자산 관련주(MSTR, MARA) 변동성 극대화 및 세력 매집 포착."
     }
     recs = [
@@ -62,14 +62,14 @@ def ai_meeting_results():
         {"t": "SOXL", "d": "03-20", "p": "45.0", "s": "세력들 하단 42불 강력 지지 중."},
         {"t": "LABU", "d": "03-27", "p": "125.0", "s": "바이오 수급 유입 시작. 리버설 상방 압력 감지."}
     ]
-    # 🚨 실적 발표 7일 (EPS, 매출, 위원회 View 추가 반영)
+    
     earnings = [
-        {"date": "03-05 (오늘/목)", "comps": [
-            {"n": "Broadcom", "s": "AVGO", "d": "broadcom.com", "t": "장후", "rec": True, "eps": "$1.04", "rev": "$11.9B", "view": "🔥 AI모멘텀 (LONG)"},
-            {"n": "Costco", "s": "COST", "d": "costco.com", "t": "장후", "rec": True, "eps": "$3.62", "rev": "$59.1B", "view": "🛡️ 안정적 (HOLD)"}
+        {"date": "03-04 (발표완료)", "comps": [
+            {"n": "Broadcom", "s": "AVGO", "d": "broadcom.com", "t": "실적 발표 완료", "rec": True, "eps": "$2.05", "rev": "$19.3B", "view": "🔥 AI모멘텀 (어닝 서프라이즈)"}
         ]},
-        {"date": "03-06 (금)", "comps": [
-            {"n": "Marvell", "s": "MRVL", "d": "marvell.com", "t": "장전", "rec": False, "eps": "$0.46", "rev": "$1.4B", "view": "가이던스 확인 요망"}
+        {"date": "03-05 (오늘/목)", "comps": [
+            {"n": "Costco", "s": "COST", "d": "costco.com", "t": "장후", "rec": True, "eps": "$4.55", "rev": "$69.3B", "view": "🛡️ 안정적 (HOLD)"},
+            {"n": "Marvell", "s": "MRVL", "d": "marvell.com", "t": "장후", "rec": False, "eps": "$0.46", "rev": "$1.4B", "view": "가이던스 확인 요망"}
         ]},
         {"date": "03-09 (월)", "comps": [
             {"n": "Oracle", "s": "ORCL", "d": "oracle.com", "t": "장후", "rec": True, "eps": "$1.38", "rev": "$13.3B", "view": "클라우드 성장 기대"}
@@ -143,7 +143,7 @@ def generate_html(data, summary, recs, options, earnings):
                 <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold">{o['s']}</p>
             </div>''' for o in options])
 
-        # EPS & Revenue 렌더링 HTML 보강
+        # 🚨 여기서 this.onerror=null 을 추가하여 무한 루프 에러 완전 격파!
         earnings_html = ""
         for day in earnings:
             earnings_html += f'<p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">{day["date"]}</p>'
@@ -153,7 +153,7 @@ def generate_html(data, summary, recs, options, earnings):
                 earnings_html += f'''
                 <div class="flex items-center justify-between p-3 rounded-xl border {style} mb-3 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
                     <div class="flex items-center gap-3">
-                        <img src="https://logo.clearbit.com/{c['d']}" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-white p-1" onerror="this.src='https://via.placeholder.com/36?text={c['s']}'">
+                        <img src="https://logo.clearbit.com/{c['d']}" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/36?text={c['s']}'">
                         <div>
                             <p class="text-xs font-black text-zinc-900 dark:text-white">{c['n']} <span class="text-[9px] text-zinc-400 font-bold ml-1">{c['s']}</span></p>
                             <p class="text-[10px] font-bold text-zinc-500 mt-0.5">EPS: <span class="text-blue-500 dark:text-blue-400">{c['eps']}</span> | Rev: <span class="text-zinc-700 dark:text-zinc-300">{c['rev']}</span></p>
@@ -165,19 +165,20 @@ def generate_html(data, summary, recs, options, earnings):
                     </div>
                 </div>'''
 
+        # 🚨 대표님 야수 이미지 무한 루프도 완벽 방어!
         base_html = """
         <!DOCTYPE html>
         <html lang="ko" class="dark">
         <head>
             <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>연신내 개미펀드 V18.2</title>
+            <title>연신내 개미펀드 V18.4</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
                 body { font-family: 'Noto Sans KR', sans-serif; transition: background-color 0.3s; }
-                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-                .ant-logo { animation: spin 20s linear infinite; filter: drop-shadow(0 0 10px rgba(212,175,55,0.4)); }
+                .ant-logo { transition: transform 0.3s; filter: drop-shadow(0 0 10px rgba(212,175,55,0.4)); }
+                .ant-logo:hover { transform: scale(1.1); }
             </style>
             <script>
                 tailwind.config = { darkMode: 'class' };
@@ -189,7 +190,7 @@ def generate_html(data, summary, recs, options, earnings):
             <div class="p-6 md:p-12 max-w-7xl mx-auto">
                 <header class="flex flex-col md:flex-row justify-between items-center mb-12 border-b border-zinc-200 dark:border-zinc-900 pb-10 gap-8">
                     <div class="flex items-center gap-8">
-                        <img src="ax.png" onerror="this.src='https://i.ibb.co/v6XkYvR/ax-removebg.png'" class="ant-logo w-24 h-24 object-contain" alt="야수">
+                        <img src="ax.jpg" onerror="this.onerror=null; this.src='https://i.ibb.co/v6XkYvR/ax-removebg.png'" class="ant-logo w-24 h-24 object-contain" alt="야수">
                         <div>
                             <h1 class="text-5xl font-black text-zinc-900 dark:text-white italic tracking-tighter mb-2">연신내 개미펀드</h1>
                             <p class="text-red-500 font-black text-xs tracking-widest mb-1 uppercase">모든 투자는 본인의 책임입니다.</p>
@@ -256,7 +257,7 @@ def generate_html(data, summary, recs, options, earnings):
 
         with open("index.html", "w", encoding="utf-8") as f:
             f.write(final_html)
-        logger.info("V18.2 HTML successfully generated.")
+        logger.info("V18.4 HTML successfully generated.")
 
     except Exception as e:
         logger.error(f"Generation Error: {e}")
