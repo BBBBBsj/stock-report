@@ -4,78 +4,192 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Yeonsinnae Alpha Fund</title>
+        <title>연신내 개미 펀드 대시보드</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
         <style>
-            body { background-color: #120C07; color: #EAE7B1; font-family: sans-serif; }
+            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap');
+            body { background-color: #120C07; color: #EAE7B1; font-family: 'Noto Sans KR', sans-serif; }
         </style>
     </head>
     <body class="p-4 md:p-8">
-        <div class="max-w-5xl mx-auto">
-            <header class="mb-8 border-b border-[#3C2A21] pb-4 flex justify-between items-end">
+        <div class="max-w-6xl mx-auto">
+            
+            <header class="mb-8 border-b border-[#3C2A21] pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-[#D4AF37]">Yeonsinnae Alpha Fund</h1>
-                    <p class="text-[#A3B18A] text-sm mt-1">Institutional Market Dashboard</p>
+                    <h1 class="text-4xl font-black text-[#D4AF37] tracking-tight">🐜 연신내 개미 펀드</h1>
+                    <p class="text-[#A3B18A] text-sm mt-2 font-bold tracking-widest">YEONSINNAE ANT FUND • V2.0</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-xs text-stone-500">Last Update (KST)</p>
-                    <p class="font-bold text-lg">2026-03-05 13:55:06</p>
+                <div class="text-left md:text-right bg-[#1A120B] p-2 rounded border border-[#3C2A21]">
+                    <p class="text-xs text-stone-500">최종 업데이트 (KST)</p>
+                    <p class="font-bold text-md text-white">2026-03-05 14:07:25</p>
                 </div>
             </header>
 
-            <div class="bg-[#1A120B] border border-[#3C2A21] p-6 rounded-xl mb-8 flex justify-between items-center">
-                <div>
-                    <p class="text-sm text-stone-400 mb-1">Fear & Greed Index</p>
-                    <p class="text-4xl font-bold text-stone-500">N/A</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-[#1A120B] border border-[#3C2A21] rounded-xl p-4 flex flex-col items-center justify-center shadow-2xl">
+                    <h2 class="text-[#A3B18A] font-bold mb-2">시장 심리 나침반</h2>
+                    <div id="gauge-chart" style="width: 100%; height: 250px;"></div>
+                    <p class="text-2xl font-black text-white mt-[-20px]">중립</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-xl font-bold text-stone-500">ERROR</p>
-                    <p class="text-xs text-stone-500 mt-1">Powered by CNN Data</p>
+
+                <div class="bg-[#2C1E12] border border-[#3C2A21] rounded-xl p-6 md:col-span-2 shadow-2xl">
+                    <h2 class="text-xl text-[#D4AF37] font-black mb-4 flex items-center">
+                        <span class="mr-2 text-2xl">🤖</span> AI 에이전트 긴급 회의록
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="bg-[#1A120B] p-4 rounded-lg border-l-4 border-red-500">
+                            <p class="text-xs text-stone-400 mb-1">심리 행동대장 (Psyche)</p>
+                            <p class="text-md font-bold text-white">😐 평화로운 눈치 보기 장세. 세력들이 방향성을 탐색하고 있습니다.</p>
+                        </div>
+                        <div class="bg-[#1A120B] p-4 rounded-lg border-l-4 border-[#D4AF37]">
+                            <p class="text-xs text-stone-400 mb-1">매매 전략가 (Opus)</p>
+                            <p class="text-md font-bold text-[#EAE7B1]">[관망 및 현금 확보] 애매할 땐 쉬는 것도 투자입니다.</p>
+                        </div>
+                        <div class="bg-[#1A120B] p-4 rounded-lg border-l-4 border-green-500">
+                            <p class="text-xs text-stone-400 mb-1">섹터 분석가 (Alpha)</p>
+                            <p class="text-sm text-stone-300 leading-relaxed">🇺🇸 개별 실적주 단기 트레이딩<br>🇰🇷 K-방산, 조선 등 모멘텀 살아있는 섹터</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            <h2 class="text-lg font-bold text-[#A3B18A] mb-4 border-b border-[#3C2A21] pb-2">🌐 글로벌 지수 현황</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-8">
                 
-        <div class="bg-[#2C1E12] border border-[#3C2A21] p-5 rounded-xl shadow-lg">
-            <p class="text-[#A3B18A] text-xs font-bold mb-2">S&P 500</p>
-            <p class="text-2xl font-bold text-[#EAE7B1] mb-1">6,869.50</p>
-            <p class="text-sm font-bold text-red-500">+0.78%</p>
-        </div>
-        
-        <div class="bg-[#2C1E12] border border-[#3C2A21] p-5 rounded-xl shadow-lg">
-            <p class="text-[#A3B18A] text-xs font-bold mb-2">NASDAQ</p>
-            <p class="text-2xl font-bold text-[#EAE7B1] mb-1">22,807.48</p>
-            <p class="text-sm font-bold text-red-500">+1.29%</p>
-        </div>
-        
-        <div class="bg-[#2C1E12] border border-[#3C2A21] p-5 rounded-xl shadow-lg">
-            <p class="text-[#A3B18A] text-xs font-bold mb-2">Bitcoin</p>
-            <p class="text-2xl font-bold text-[#EAE7B1] mb-1">72,749.05</p>
-            <p class="text-sm font-bold text-red-500">+6.52%</p>
-        </div>
-        
-        <div class="bg-[#2C1E12] border border-[#3C2A21] p-5 rounded-xl shadow-lg">
-            <p class="text-[#A3B18A] text-xs font-bold mb-2">VIX</p>
-            <p class="text-2xl font-bold text-[#EAE7B1] mb-1">21.15</p>
-            <p class="text-sm font-bold text-blue-500">-10.27%</p>
-        </div>
-        
-        <div class="bg-[#2C1E12] border border-[#3C2A21] p-5 rounded-xl shadow-lg">
-            <p class="text-[#A3B18A] text-xs font-bold mb-2">WTI Crude</p>
-            <p class="text-2xl font-bold text-[#EAE7B1] mb-1">77.31</p>
-            <p class="text-sm font-bold text-red-500">+3.69%</p>
-        </div>
-        
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">KOSPI (한국)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">5,619.01</p>
+                <p class="text-xs font-bold text-red-500">+10.32%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">Nikkei (일본)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">55,609.20</p>
+                <p class="text-xs font-bold text-red-500">+2.51%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">Shanghai (중국)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">4,116.77</p>
+                <p class="text-xs font-bold text-red-500">+0.84%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">STOXX50 (유럽)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">5,870.92</p>
+                <p class="text-xs font-bold text-red-500">+1.72%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">S&P 500 (미국)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">6,869.50</p>
+                <p class="text-xs font-bold text-red-500">+0.78%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">NASDAQ (미국)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">22,807.48</p>
+                <p class="text-xs font-bold text-red-500">+1.29%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">VIX (공포지수)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">21.15</p>
+                <p class="text-xs font-bold text-blue-500">-10.27%</p>
+            </div>
+            
             </div>
 
-            <div class="bg-[#2C1E12] border border-[#3C2A21] p-6 rounded-xl">
-                <h2 class="text-xl text-[#D4AF37] font-bold mb-4">현재 대응 전략</h2>
-                <p class="text-stone-300 leading-relaxed">
-                    현금 비중 100% 유지. 시장의 심리가 극단적 공포(ERROR) 구간에 머물고 있습니다.<br>
-                    추가적인 VIX 급등 여부를 모니터링하며, 반등 시그널 확인 전까지 신규 진입을 보류합니다.
-                </p>
+            <h2 class="text-lg font-bold text-[#A3B18A] mb-4 border-b border-[#3C2A21] pb-2">🪙 암호화폐 & 원자재</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-10">
+                
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">Bitcoin</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">72,802.40</p>
+                <p class="text-xs font-bold text-red-500">+6.60%</p>
             </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">Ethereum</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">2,135.77</p>
+                <p class="text-xs font-bold text-red-500">+7.72%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">Gold (금)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">5,181.70</p>
+                <p class="text-xs font-bold text-red-500">+1.45%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">Silver (은)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">84.89</p>
+                <p class="text-xs font-bold text-red-500">+2.37%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">WTI Crude (원유)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">77.31</p>
+                <p class="text-xs font-bold text-red-500">+3.69%</p>
+            </div>
+            
+            <div class="bg-[#2C1E12] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">Copper (구리)</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">5.89</p>
+                <p class="text-xs font-bold text-red-500">+2.08%</p>
+            </div>
+            
+            </div>
+            
+            <footer class="text-center text-stone-600 text-xs py-4 border-t border-[#3C2A21]">
+                <p>Designed for Yeonsinnae Ant Fund. Powered by AI Agents.</p>
+            </footer>
         </div>
+
+        <script>
+            var chartDom = document.getElementById('gauge-chart');
+            var myChart = echarts.init(chartDom);
+            var option = {
+                series: [{
+                    type: 'gauge',
+                    startAngle: 180,
+                    endAngle: 0,
+                    min: 0,
+                    max: 100,
+                    splitNumber: 4,
+                    itemStyle: {
+                        color: function(params) {
+                            var val = 47;
+                            if(val <= 25) return '#EF4444'; // Red
+                            if(val <= 45) return '#F97316'; // Orange
+                            if(val <= 55) return '#78716C'; // Stone
+                            if(val <= 75) return '#4ADE80'; // Green
+                            return '#16A34A'; // Dark Green
+                        }()
+                    },
+                    progress: { show: true, width: 20 },
+                    pointer: { show: false },
+                    axisLine: { lineStyle: { width: 20, color: [[1, '#2C1E12']] } },
+                    axisTick: { show: false },
+                    splitLine: { show: false },
+                    axisLabel: { show: false },
+                    detail: {
+                        valueAnimation: true,
+                        formatter: '{value}',
+                        color: '#EAE7B1',
+                        fontSize: 45,
+                        fontWeight: '900',
+                        offsetCenter: [0, '-10%']
+                    },
+                    data: [{ value: 47 }]
+                }]
+            };
+            myChart.setOption(option);
+            window.addEventListener('resize', function() {
+                myChart.resize();
+            });
+        </script>
     </body>
     </html>
     
