@@ -22,20 +22,20 @@
         <div class="flex gap-6 p-4 bg-white dark:bg-[#151515] border-b border-zinc-200 dark:border-zinc-800 overflow-x-auto shadow-sm">
             <div class="flex items-center gap-3 whitespace-nowrap">
                 <span class="text-[11px] font-bold text-zinc-500">💵 원/달러</span>
-                <span class="text-sm font-black text-zinc-900 dark:text-white">1,463.93 원</span>
-                <span class="text-[10px] font-bold text-blue-500">-1.29%</span>
+                <span class="text-sm font-black text-zinc-900 dark:text-white">1,463.58 원</span>
+                <span class="text-[10px] font-bold text-blue-500">-1.31%</span>
             </div>
             <div class="w-[1px] h-4 bg-zinc-300 dark:bg-zinc-700"></div>
             <div class="flex items-center gap-3 whitespace-nowrap">
                 <span class="text-[11px] font-bold text-zinc-500">🔗 USDT(테더)</span>
-                <span class="text-sm font-black text-zinc-900 dark:text-white">1,478.6 원</span>
+                <span class="text-sm font-black text-zinc-900 dark:text-white">1,478.3 원</span>
                 <span class="text-[10px] font-bold text-blue-500">-0.01%</span>
             </div>
             <div class="w-[1px] h-4 bg-zinc-300 dark:bg-zinc-700"></div>
             <div class="flex items-center gap-3 whitespace-nowrap">
                 <span class="text-[11px] font-bold text-zinc-500">🔗 USDC(서클)</span>
-                <span class="text-sm font-black text-zinc-900 dark:text-white">1,478.3 원</span>
-                <span class="text-[10px] font-bold text-blue-500">-0.01%</span>
+                <span class="text-sm font-black text-zinc-900 dark:text-white">1,478.1 원</span>
+                <span class="text-[10px] font-bold text-red-500">+0.00%</span>
             </div>
         </div>
             <div class="p-6 md:p-12 max-w-7xl mx-auto">
@@ -51,7 +51,7 @@
                         <button onclick="toggleTheme()" class="p-3 bg-white dark:bg-[#1e1e1e] border border-zinc-200 dark:border-zinc-800 rounded-full shadow-lg">🌓 테마 전환</button>
                         <div class="text-right p-4 bg-white dark:bg-[#151515] rounded-xl border border-zinc-200 dark:border-zinc-900 shadow-sm">
                             <p class="text-[9px] text-zinc-500 font-black mb-1">KST SYNC</p>
-                            <p class="text-sm font-black text-zinc-900 dark:text-white italic">2026-03-05 16:38</p>
+                            <p class="text-sm font-black text-zinc-900 dark:text-white italic">2026-03-05 16:42</p>
                         </div>
                     </div>
                 </header>
@@ -83,14 +83,14 @@
             </div>
             <div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm transition-all" onmouseenter="showChart('BTC-USD')">
                 <p class="text-[10px] text-zinc-500 font-bold mb-1">비트코인</p>
-                <p class="text-lg font-black italic text-zinc-900 dark:text-white">72,312.9</p>
-                <p class="text-blue-500 text-[11px] font-bold">-0.55%</p>
+                <p class="text-lg font-black italic text-zinc-900 dark:text-white">72,228.8</p>
+                <p class="text-blue-500 text-[11px] font-bold">-0.66%</p>
                 <div id="chart-container-BTC-USD" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-BTC-USD" class="w-full h-full"></div></div>
             </div>
             <div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm transition-all" onmouseenter="showChart('ETH-USD')">
                 <p class="text-[10px] text-zinc-500 font-bold mb-1">이더리움</p>
-                <p class="text-lg font-black italic text-zinc-900 dark:text-white">2,119.3</p>
-                <p class="text-blue-500 text-[11px] font-bold">-0.34%</p>
+                <p class="text-lg font-black italic text-zinc-900 dark:text-white">2,118.6</p>
+                <p class="text-blue-500 text-[11px] font-bold">-0.37%</p>
                 <div id="chart-container-ETH-USD" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-ETH-USD" class="w-full h-full"></div></div>
             </div></div>
 
@@ -253,7 +253,7 @@
             </div>
 
             <script>
-                const allHistory = {"USDKRW=X": [1439.99, 1426.93, 1432.32, 1438.5, 1452.27, 1483.07, 1463.93], "USDT-USD": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "USDC-USD": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "^KS11": [5969.64, 6083.86, 6307.27, 6244.13, 5791.91, 5093.54, 5583.9], "^IXIC": [22863.68, 23152.08, 22878.38, 22668.21, 22748.86, 22516.69, 22807.48], "^GSPC": [6890.07, 6946.13, 6908.86, 6878.88, 6881.62, 6816.63, 6869.5], "^VIX": [19.55, 17.93, 18.63, 19.86, 21.44, 23.57, 21.15], "BTC-USD": [65881.8, 66995.86, 65738.1, 68775.85, 68293.65, 72710.58, 72312.91], "ETH-USD": [1930.76, 1965.05, 1939.07, 2027.27, 1982.77, 2126.51, 2119.3], "USDT_KRW_CALC": [0, 0], "USDC_KRW_CALC": [0, 0]};
+                const allHistory = {"USDKRW=X": [1439.99, 1426.93, 1432.32, 1438.5, 1452.27, 1483.07, 1463.58], "USDT-USD": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "USDC-USD": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "^KS11": [5969.64, 6083.86, 6307.27, 6244.13, 5791.91, 5093.54, 5583.9], "^IXIC": [22863.68, 23152.08, 22878.38, 22668.21, 22748.86, 22516.69, 22807.48], "^GSPC": [6890.07, 6946.13, 6908.86, 6878.88, 6881.62, 6816.63, 6869.5], "^VIX": [19.55, 17.93, 18.63, 19.86, 21.44, 23.57, 21.15], "BTC-USD": [65881.8, 66995.86, 65738.1, 68775.85, 68293.65, 72710.58, 72228.8], "ETH-USD": [1930.76, 1965.05, 1939.07, 2027.27, 1982.77, 2126.51, 2118.59], "USDT_KRW_CALC": [0, 0], "USDC_KRW_CALC": [0, 0]};
                 function showChart(sym) {
                     const container = document.getElementById('chart-' + sym);
                     if(!container) return;
