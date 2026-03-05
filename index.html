@@ -3,14 +3,16 @@
         <html lang="ko" class="dark">
         <head>
             <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>연신내 개미펀드 V18.4</title>
+            <title>연신내 개미펀드 V18.5</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
                 body { font-family: 'Noto Sans KR', sans-serif; transition: background-color 0.3s; }
-                .ant-logo { transition: transform 0.3s; filter: drop-shadow(0 0 10px rgba(212,175,55,0.4)); }
-                .ant-logo:hover { transform: scale(1.1); }
+                /* 🚨 빙글빙글 회전 애니메이션 복구! (6s 속도로 빠르게 회전) */
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                .ant-logo { animation: spin 8s linear infinite; transition: transform 0.3s; filter: drop-shadow(0 0 10px rgba(212,175,55,0.4)); }
+                .ant-logo:hover { animation-play-state: paused; transform: scale(1.1); }
             </style>
             <script>
                 tailwind.config = { darkMode: 'class' };
@@ -22,24 +24,24 @@
         <div class="flex gap-6 p-4 bg-white dark:bg-[#151515] border-b border-zinc-200 dark:border-zinc-800 overflow-x-auto shadow-sm">
             <div class="flex items-center gap-3 whitespace-nowrap">
                 <span class="text-[11px] font-bold text-zinc-500">💵 원/달러</span>
-                <span class="text-sm font-black text-zinc-900 dark:text-white">1,463.58 원</span>
-                <span class="text-[10px] font-bold text-blue-500">-1.31%</span>
+                <span class="text-sm font-black text-zinc-900 dark:text-white">1,463.48 원</span>
+                <span class="text-[10px] font-bold text-blue-500">-1.32%</span>
             </div>
             <div class="w-[1px] h-4 bg-zinc-300 dark:bg-zinc-700"></div>
             <div class="flex items-center gap-3 whitespace-nowrap">
                 <span class="text-[11px] font-bold text-zinc-500">🔗 USDT(테더)</span>
-                <span class="text-sm font-black text-zinc-900 dark:text-white">1,478.3 원</span>
+                <span class="text-sm font-black text-zinc-900 dark:text-white">1,478.2 원</span>
                 <span class="text-[10px] font-bold text-blue-500">-0.01%</span>
             </div>
             <div class="w-[1px] h-4 bg-zinc-300 dark:bg-zinc-700"></div>
             <div class="flex items-center gap-3 whitespace-nowrap">
                 <span class="text-[11px] font-bold text-zinc-500">🔗 USDC(서클)</span>
-                <span class="text-sm font-black text-zinc-900 dark:text-white">1,478.1 원</span>
+                <span class="text-sm font-black text-zinc-900 dark:text-white">1,478.0 원</span>
                 <span class="text-[10px] font-bold text-red-500">+0.00%</span>
             </div>
         </div>
             <div class="p-6 md:p-12 max-w-7xl mx-auto">
-                <header class="flex flex-col md:flex-row justify-between items-center mb-12 border-b border-zinc-200 dark:border-zinc-900 pb-10 gap-8">
+                <header class="flex flex-col md:flex-row justify-between items-center mb-12 border-b border-zinc-200 dark:border-zinc-900 pb-10 gap-8 gap-y-6">
                     <div class="flex items-center gap-8">
                         <img src="ax.jpg" onerror="this.onerror=null; this.src='https://i.ibb.co/v6XkYvR/ax-removebg.png'" class="ant-logo w-24 h-24 object-contain" alt="야수">
                         <div>
@@ -47,14 +49,22 @@
                             <p class="text-red-500 font-black text-xs tracking-widest mb-1 uppercase">모든 투자는 본인의 책임입니다.</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <button onclick="toggleTheme()" class="p-3 bg-white dark:bg-[#1e1e1e] border border-zinc-200 dark:border-zinc-800 rounded-full shadow-lg">🌓 테마 전환</button>
-                        <div class="text-right p-4 bg-white dark:bg-[#151515] rounded-xl border border-zinc-200 dark:border-zinc-900 shadow-sm">
-                            <p class="text-[9px] text-zinc-500 font-black mb-1">KST SYNC</p>
-                            <p class="text-sm font-black text-zinc-900 dark:text-white italic">2026-03-05 16:42</p>
+                    <div class="flex items-center gap-4 bg-white dark:bg-[#151515] p-3 rounded-xl border border-zinc-200 dark:border-zinc-900 shadow-sm">
+                        <button onclick="toggleTheme()" class="p-3 bg-zinc-100 dark:bg-[#1e1e1e] border border-zinc-200 dark:border-zinc-800 rounded-full shadow-lg hover:bg-[#D4AF37] hover:text-black transition">🌓</button>
+                        <div class="text-right pl-3 border-l border-zinc-100 dark:border-zinc-800">
+                            <p class="text-[9px] text-zinc-500 font-black mb-1 tracking-widest uppercase">KST SYNC</p>
+                            <p class="text-sm font-black text-zinc-900 dark:text-white italic">2026-03-05 16:43</p>
                         </div>
                     </div>
                 </header>
+
+                
+        <div class="bg-zinc-900 p-8 rounded-3xl border-4 border-dashed border-[#D4AF37] shadow-2xl animate-pulse mb-8 text-center relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 text-[200px] opacity-10 font-black italic">!</div>
+            <h2 class="text-3xl font-black text-white italic tracking-tighter mb-4">🌌 超越 야수 (재미용 - 초극대 변동성)</h2>
+            <div class="bg-[#D4AF37]/20 p-4 rounded-xl mb-4 text-[#D4AF37] font-black text-sm border-2 border-white/10 tracking-[0.3em] inline-block">NVDL, BITX, SOXS</div>
+            <p class="text-zinc-400 text-sm font-bold leading-relaxed max-w-2xl mx-auto">위원회 분석 결과: 도파민 최극대화 구간. 하루 20% 이상의 폭등락을 감당 가능한 영혼만 입장 허가. 한강뷰 vs 한강물. 1%의 미친 야수만 요격 가능한 영역.</p>
+        </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
             <div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm transition-all" onmouseenter="showChart('^KS11')">
@@ -89,111 +99,118 @@
             </div>
             <div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm transition-all" onmouseenter="showChart('ETH-USD')">
                 <p class="text-[10px] text-zinc-500 font-bold mb-1">이더리움</p>
-                <p class="text-lg font-black italic text-zinc-900 dark:text-white">2,118.6</p>
-                <p class="text-blue-500 text-[11px] font-bold">-0.37%</p>
+                <p class="text-lg font-black italic text-zinc-900 dark:text-white">2,117.9</p>
+                <p class="text-blue-500 text-[11px] font-bold">-0.41%</p>
                 <div id="chart-container-ETH-USD" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-ETH-USD" class="w-full h-full"></div></div>
             </div></div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-16">
                     <div class="lg:col-span-3">
                         <div class="bg-white dark:bg-[#151515] p-8 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl mb-8 relative overflow-hidden">
-                            <h2 class="text-2xl font-black text-zinc-900 dark:text-white mb-6 italic">🏛️ 위원회 섹터 요약</h2>
-                            <div class="space-y-1 relative z-10"><div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[반도체/AI]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">엔비디아 하단 지지선 확보. 레버리지(SOXL) 공매도 잔고 임계점 도달로 숏스퀴즈 화약고 상태.</span></div><div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[지정학/거시]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">달러 강세 및 지정학적 리스크 지속. 안전자산과 코인 시장으로의 자금 양극화 현상 심화.</span></div><div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[빅테크]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">ETF(QQQ) 자금 유입 가속화. 시장은 브로드컴 실적 호조에 이어 다음 타자들을 주시 중.</span></div><div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[코인/레버리지]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">이더리움 현물 수급 폭발. 가상자산 관련주(MSTR, MARA) 변동성 극대화 및 세력 매집 포착.</span></div></div>
+                            <div class="absolute -right-10 -bottom-10 opacity-5 text-[150px] font-black italic">FACT</div>
+                            <h2 class="text-2xl font-black text-zinc-900 dark:text-white mb-6 italic relative z-10">🏛️ 위원회 섹터 요약</h2>
+                            <div class="space-y-1 relative z-10"><div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[반도체/AI]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">엔비디아 하단 지지선 확보. 레버리지(SOXL) 공매도 잔고 임계점 도달로 숏스퀴즈 화약고 상태.</span></div><div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[지정학/거시]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">달러 강세 및 지정학적 리스크 지속. 안전자산과 코인 시장으로의 자금 양극화 현상 심화.</span></div><div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[빅테크]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">ETF(QQQ) 자금 유입 가속화. 브로드컴 어닝 서프라이즈 이후 기술주 전반 실적 기대감 고조.</span></div><div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[코인/레버리지]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">이더리움 현물 수급 폭발. 가상자산 관련주(MSTR, MARA) 및 레버리지 종목 변동성 극대화 포착.</span></div></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-md">
                 <h3 class="text-zinc-900 dark:text-white font-black text-lg mb-3 italic tracking-tighter">🔥 싸나이테스트 (엄선)</h3>
                 <div class="bg-[#D4AF37]/10 p-3 rounded-lg mb-3 text-[#D4AF37] font-black text-xs border border-[#D4AF37]/20">ETHU, SOXL, MSTR</div>
-                <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed">변동성 상위 1% 정예. 숏스퀴즈 타점 및 광기 수급 포착.</p>
+                <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed" style="word-break:keep-all;">위원회 만장일치 엄선. 변동성 상위 1% 정예. 숏스퀴즈 타점 및 광기 수급 포착.</p>
             </div>
             <div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-md">
                 <h3 class="text-zinc-900 dark:text-white font-black text-lg mb-3 italic tracking-tighter">🏃‍♂️ 평범이의 숟가락 (엄선)</h3>
                 <div class="bg-[#D4AF37]/10 p-3 rounded-lg mb-3 text-[#D4AF37] font-black text-xs border border-[#D4AF37]/20">TQQQ, NVDA, TSLA</div>
-                <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed">추세 추종 매매 최적화. 스마트 머니 유입 및 눌림목 반등 구간.</p>
+                <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed" style="word-break:keep-all;">추세 추종 매매 최적화. 스마트 머니 유입 및 눌림목 반등 구간.</p>
             </div>
             <div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-md">
                 <h3 class="text-zinc-900 dark:text-white font-black text-lg mb-3 italic tracking-tighter">🛡️ 쫄보들의 안식처 (엄선)</h3>
                 <div class="bg-[#D4AF37]/10 p-3 rounded-lg mb-3 text-[#D4AF37] font-black text-xs border border-[#D4AF37]/20">SCHD, TLT, IAU</div>
-                <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed">위원회 자산 방어 분과 엄선. 하방 경직성 및 배당 안전성 1위.</p>
+                <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed" style="word-break:keep-all;">위원회 자산 방어 분과 엄선. 하방 경직성 및 배당 안전성 1위.</p>
             </div>
             <div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-md">
                 <h3 class="text-zinc-900 dark:text-white font-black text-lg mb-3 italic tracking-tighter">🕵️ 세력 형님 뒤쫓기 (엄선)</h3>
                 <div class="bg-[#D4AF37]/10 p-3 rounded-lg mb-3 text-[#D4AF37] font-black text-xs border border-[#D4AF37]/20">LABU, COIN, MARA</div>
-                <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed">온체인 대량 매집 시그널. 공매도 항복 임박한 리버설 타점 요격.</p>
+                <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed" style="word-break:keep-all;">온체인 대량 매집 시그널 포착. 공매도 항복 임박한 리버설 타점 요격.</p>
             </div></div>
                         <h2 class="text-[10px] font-black text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-3">
-                            <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 옵션 세력 분석 & MAX PAIN
+                            <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 옵션 세력 분석 & MAX PAIN (TOP 5)
                         </h2>
                         <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1">
+            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
+                <div class="absolute right-1 top-1 text-red-500/10 text-4xl font-black">!</div>
+                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1 relative z-10">
                     <span class="text-zinc-900 dark:text-white font-black text-xs">NVDA</span>
                     <span class="text-red-500 text-[9px] font-bold">03-20 만기</span>
                 </div>
-                <div class="flex justify-between my-1"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">135.0</span></div>
-                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold">콜옵션 프리미엄 과열. 135불 수렴 예상.</p>
+                <div class="flex justify-between my-1 relative z-10"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">135.0</span></div>
+                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold relative z-10">콜옵션 프리미엄 과열. 135불 수렴 예상.</p>
             </div>
-            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1">
+            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
+                <div class="absolute right-1 top-1 text-red-500/10 text-4xl font-black">!</div>
+                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1 relative z-10">
                     <span class="text-zinc-900 dark:text-white font-black text-xs">TSLA</span>
                     <span class="text-red-500 text-[9px] font-bold">03-20 만기</span>
                 </div>
-                <div class="flex justify-between my-1"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">210.0</span></div>
-                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold">맥스페인 부근 횡보 유지. 돌파 시 헤지 매수 폭증.</p>
+                <div class="flex justify-between my-1 relative z-10"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">210.0</span></div>
+                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold relative z-10">맥스페인 부근 횡보 유지. 돌파 시 헤지 매수 폭증.</p>
             </div>
-            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1">
-                    <span class="text-zinc-900 dark:text-white font-black text-xs">ETHU</span>
-                    <span class="text-red-500 text-[9px] font-bold">03-27 만기</span>
-                </div>
-                <div class="flex justify-between my-1"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">15.0</span></div>
-                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold">이더리움 2배 옵션 신규 매수세 유입.</p>
-            </div>
-            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1">
+            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
+                <div class="absolute right-1 top-1 text-red-500/10 text-4xl font-black">!</div>
+                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1 relative z-10">
                     <span class="text-zinc-900 dark:text-white font-black text-xs">SOXL</span>
                     <span class="text-red-500 text-[9px] font-bold">03-20 만기</span>
                 </div>
-                <div class="flex justify-between my-1"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">45.0</span></div>
-                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold">세력들 하단 42불 강력 지지 중.</p>
+                <div class="flex justify-between my-1 relative z-10"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">45.0</span></div>
+                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold relative z-10">숏스퀴즈 타점 대기. 세력들 하단 42불 강력 지지 중.</p>
             </div>
-            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1">
-                    <span class="text-zinc-900 dark:text-white font-black text-xs">LABU</span>
-                    <span class="text-red-500 text-[9px] font-bold">03-27 만기</span>
+            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
+                <div class="absolute right-1 top-1 text-red-500/10 text-4xl font-black">!</div>
+                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1 relative z-10">
+                    <span class="text-zinc-900 dark:text-white font-black text-xs">MSTR</span>
+                    <span class="text-red-500 text-[9px] font-bold">03-20 만기</span>
                 </div>
-                <div class="flex justify-between my-1"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">125.0</span></div>
-                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold">바이오 수급 유입 시작. 리버설 상방 압력 감지.</p>
+                <div class="flex justify-between my-1 relative z-10"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">1650</span></div>
+                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold relative z-10">비트코인 변동성 직결. 콜 프리미엄 과열 주의.</p>
+            </div>
+            <div class="bg-white dark:bg-[#151515] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
+                <div class="absolute right-1 top-1 text-red-500/10 text-4xl font-black">!</div>
+                <div class="flex justify-between mb-1 border-b border-zinc-100 dark:border-zinc-800 pb-1 relative z-10">
+                    <span class="text-zinc-900 dark:text-white font-black text-xs">AVGO</span>
+                    <span class="text-red-500 text-[9px] font-bold">03-20 만기</span>
+                </div>
+                <div class="flex justify-between my-1 relative z-10"><span class="text-zinc-500 text-[9px] font-bold uppercase">MAX PAIN</span><span class="text-zinc-900 dark:text-white font-black text-[10px]">140.0</span></div>
+                <p class="text-zinc-600 dark:text-zinc-400 text-[10px] leading-tight font-bold relative z-10">어닝 서프라이즈 이후 콜옵션 대량 매집 포착.</p>
             </div></div>
                     </div>
                     
-                    <div class="bg-white dark:bg-[#151515] p-8 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl h-fit">
-                        <h3 class="text-[11px] font-black text-zinc-500 mb-6 uppercase border-l-4 border-[#D4AF37] pl-4 tracking-widest">실적 발표 & 펀더멘털 (7D)</h3>
-                        <div class="space-y-4"><p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">03-04 (발표완료)</p>
+                    <div class="bg-white dark:bg-[#151515] p-8 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl h-fit relative overflow-hidden">
+                        <div class="absolute -right-5 -bottom-5 text-[120px] opacity-5 font-black italic">E</div>
+                        <h3 class="text-[11px] font-black text-zinc-500 mb-6 uppercase border-l-4 border-[#D4AF37] pl-4 tracking-widest relative z-10">실적 발표 & 펀더멘털 (7D)</h3>
+                        <div class="space-y-4 relative z-10"><p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">03-04 (발표완료)</p>
                 <div class="flex items-center justify-between p-3 rounded-xl border border-[#D4AF37] bg-[#D4AF37]/5 mb-3 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
                     <div class="flex items-center gap-3">
                         <img src="https://logo.clearbit.com/broadcom.com" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/36?text=AVGO'">
                         <div>
-                            <p class="text-xs font-black text-zinc-900 dark:text-white">Broadcom <span class="text-[9px] text-zinc-400 font-bold ml-1">AVGO</span></p>
+                            <p class="text-xs font-black text-zinc-900 dark:text-white">Broadcom<span class="bg-[#D4AF37] text-black text-[8px] px-1 rounded font-black ml-2 animate-pulse">LONG</span> <span class="text-[9px] text-zinc-400 font-bold ml-1">AVGO</span></p>
                             <p class="text-[10px] font-bold text-zinc-500 mt-0.5">EPS: <span class="text-blue-500 dark:text-blue-400">$2.05</span> | Rev: <span class="text-zinc-700 dark:text-zinc-300">$19.3B</span></p>
                         </div>
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">실적 발표 완료</span>
-                        <p class="text-[9px] font-black text-[#D4AF37] mt-1.5">🔥 AI모멘텀 (어닝 서프라이즈)</p>
+                        <p class="text-[9px] font-black text-[#D4AF37] mt-1.5 tracking-tighter">🔥 AI모멘텀 (어닝 서프라이즈)</p>
                     </div>
                 </div><p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">03-05 (오늘/목)</p>
                 <div class="flex items-center justify-between p-3 rounded-xl border border-[#D4AF37] bg-[#D4AF37]/5 mb-3 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
                     <div class="flex items-center gap-3">
                         <img src="https://logo.clearbit.com/costco.com" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/36?text=COST'">
                         <div>
-                            <p class="text-xs font-black text-zinc-900 dark:text-white">Costco <span class="text-[9px] text-zinc-400 font-bold ml-1">COST</span></p>
+                            <p class="text-xs font-black text-zinc-900 dark:text-white">Costco<span class="bg-[#D4AF37] text-black text-[8px] px-1 rounded font-black ml-2 animate-pulse">LONG</span> <span class="text-[9px] text-zinc-400 font-bold ml-1">COST</span></p>
                             <p class="text-[10px] font-bold text-zinc-500 mt-0.5">EPS: <span class="text-blue-500 dark:text-blue-400">$4.55</span> | Rev: <span class="text-zinc-700 dark:text-zinc-300">$69.3B</span></p>
                         </div>
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">장후</span>
-                        <p class="text-[9px] font-black text-[#D4AF37] mt-1.5">🛡️ 안정적 (HOLD)</p>
+                        <p class="text-[9px] font-black text-[#D4AF37] mt-1.5 tracking-tighter">🛡️ 안정적 (HOLD)</p>
                     </div>
                 </div>
                 <div class="flex items-center justify-between p-3 rounded-xl border border-zinc-100 dark:border-zinc-800 mb-3 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
@@ -206,33 +223,20 @@
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">장후</span>
-                        <p class="text-[9px] font-black text-zinc-500 mt-1.5">가이던스 확인 요망</p>
+                        <p class="text-[9px] font-black text-zinc-500 mt-1.5 tracking-tighter">가이던스 확인 요망</p>
                     </div>
                 </div><p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">03-09 (월)</p>
                 <div class="flex items-center justify-between p-3 rounded-xl border border-[#D4AF37] bg-[#D4AF37]/5 mb-3 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
                     <div class="flex items-center gap-3">
                         <img src="https://logo.clearbit.com/oracle.com" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/36?text=ORCL'">
                         <div>
-                            <p class="text-xs font-black text-zinc-900 dark:text-white">Oracle <span class="text-[9px] text-zinc-400 font-bold ml-1">ORCL</span></p>
+                            <p class="text-xs font-black text-zinc-900 dark:text-white">Oracle<span class="bg-[#D4AF37] text-black text-[8px] px-1 rounded font-black ml-2 animate-pulse">LONG</span> <span class="text-[9px] text-zinc-400 font-bold ml-1">ORCL</span></p>
                             <p class="text-[10px] font-bold text-zinc-500 mt-0.5">EPS: <span class="text-blue-500 dark:text-blue-400">$1.38</span> | Rev: <span class="text-zinc-700 dark:text-zinc-300">$13.3B</span></p>
                         </div>
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">장후</span>
-                        <p class="text-[9px] font-black text-[#D4AF37] mt-1.5">클라우드 성장 기대</p>
-                    </div>
-                </div><p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">03-10 (화)</p>
-                <div class="flex items-center justify-between p-3 rounded-xl border border-zinc-100 dark:border-zinc-800 mb-3 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
-                    <div class="flex items-center gap-3">
-                        <img src="https://logo.clearbit.com/asana.com" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/36?text=ASAN'">
-                        <div>
-                            <p class="text-xs font-black text-zinc-900 dark:text-white">Asana <span class="text-[9px] text-zinc-400 font-bold ml-1">ASAN</span></p>
-                            <p class="text-[10px] font-bold text-zinc-500 mt-0.5">EPS: <span class="text-blue-500 dark:text-blue-400">-$0.10</span> | Rev: <span class="text-zinc-700 dark:text-zinc-300">$168M</span></p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-[9px] font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">장후</span>
-                        <p class="text-[9px] font-black text-zinc-500 mt-1.5">적자폭 축소 여부</p>
+                        <p class="text-[9px] font-black text-[#D4AF37] mt-1.5 tracking-tighter">클라우드 성장 기대</p>
                     </div>
                 </div><p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">03-11 (수)</p>
                 <div class="flex items-center justify-between p-3 rounded-xl border border-zinc-100 dark:border-zinc-800 mb-3 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
@@ -245,7 +249,7 @@
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">장후</span>
-                        <p class="text-[9px] font-black text-zinc-500 mt-1.5">AI 수익화 증명 필요</p>
+                        <p class="text-[9px] font-black text-zinc-500 mt-1.5 tracking-tighter">AI 수익화 증명 필요</p>
                     </div>
                 </div></div>
                     </div>
@@ -253,7 +257,7 @@
             </div>
 
             <script>
-                const allHistory = {"USDKRW=X": [1439.99, 1426.93, 1432.32, 1438.5, 1452.27, 1483.07, 1463.58], "USDT-USD": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "USDC-USD": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "^KS11": [5969.64, 6083.86, 6307.27, 6244.13, 5791.91, 5093.54, 5583.9], "^IXIC": [22863.68, 23152.08, 22878.38, 22668.21, 22748.86, 22516.69, 22807.48], "^GSPC": [6890.07, 6946.13, 6908.86, 6878.88, 6881.62, 6816.63, 6869.5], "^VIX": [19.55, 17.93, 18.63, 19.86, 21.44, 23.57, 21.15], "BTC-USD": [65881.8, 66995.86, 65738.1, 68775.85, 68293.65, 72710.58, 72228.8], "ETH-USD": [1930.76, 1965.05, 1939.07, 2027.27, 1982.77, 2126.51, 2118.59], "USDT_KRW_CALC": [0, 0], "USDC_KRW_CALC": [0, 0]};
+                const allHistory = {"USDKRW=X": [1439.99, 1426.93, 1432.32, 1438.5, 1452.27, 1483.07, 1463.48], "USDT-USD": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "USDC-USD": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "^KS11": [5969.64, 6083.86, 6307.27, 6244.13, 5791.91, 5093.54, 5583.9], "^IXIC": [22863.68, 23152.08, 22878.38, 22668.21, 22748.86, 22516.69, 22807.48], "^GSPC": [6890.07, 6946.13, 6908.86, 6878.88, 6881.62, 6816.63, 6869.5], "^VIX": [19.55, 17.93, 18.63, 19.86, 21.44, 23.57, 21.15], "BTC-USD": [65881.8, 66995.86, 65738.1, 68775.85, 68293.65, 72710.58, 72228.8], "ETH-USD": [1930.76, 1965.05, 1939.07, 2027.27, 1982.77, 2126.51, 2117.88], "NVDL": [91.25, 94.06, 83.52, 76.49, 80.9, 78.83, 81.41], "BITX": [13.86, 15.87, 15.09, 14.25, 15.77, 15.36, 17.54], "SOXS": [1.66, 1.59, 1.72, 1.79, 1.79, 2.06, 1.93], "ETHU": [18.78, 23.25, 22.03, 19.77, 22.16, 20.85, 24.53], "SOXL": [68.53, 71.86, 65.34, 62.77, 62.76, 53.42, 56.62], "MSTR": [124.61, 135.65, 133.4, 129.5, 137.65, 132.68, 146.44], "TQQQ": [49.78, 51.87, 50.05, 49.52, 49.7, 48.1, 50.26], "TSLA": [409.38, 417.4, 408.58, 402.51, 403.32, 392.43, 405.94], "LABU": [179.4, 176.87, 173.7, 172.7, 169.5, 156.86, 168.12], "COIN": [162.03, 183.94, 181.06, 175.85, 185.24, 182.36, 208.93], "COST": [998.43, 994.76, 986.74, 1010.79, 1002.77, 1007.77, 1006.74], "AVGO": [325.49, 332.31, 321.7, 319.55, 318.82, 313.84, 317.53], "ORCL": [146.14, 147.89, 150.31, 145.4, 149.25, 149.01, 152.37], "USDT_KRW_CALC": [0, 0], "USDC_KRW_CALC": [0, 0]};
                 function showChart(sym) {
                     const container = document.getElementById('chart-' + sym);
                     if(!container) return;
