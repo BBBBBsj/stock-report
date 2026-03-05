@@ -4,18 +4,16 @@ import json
 import logging
 import sys
 
-# 1. 15인 위원회 하이퍼 리스크 분석 엔진 가동
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("Beast_V18_5")
+logger = logging.getLogger("Beast_V18_7")
 
 def fetch_extensive_data():
-    # 초월 야수 등급을 위한 초고위험 레버리지 종목 추가 수집
     assets = {
         "CURR": {"원/달러": "USDKRW=X", "USDT": "USDT-USD", "USDC": "USDC-USD"},
         "INDEX": {"코스피": "^KS11", "나스닥": "^IXIC", "S&P500": "^GSPC", "공포지수": "^VIX"},
         "CRYPTO": {"비트코인": "BTC-USD", "이더리움": "ETH-USD"},
-        # 초월 야수 및 싸나이 엄선 풀
-        "WATCH": {"NVDL":"NVDL", "BITX":"BITX", "SOXS":"SOXS", "ETHU":"ETHU", "SOXL":"SOXL", "MSTR":"MSTR", "TQQQ":"TQQQ", "TSLA":"TSLA", "LABU":"LABU", "COIN":"COIN", "COST":"COST", "AVGO":"AVGO", "ORCL":"ORCL"}
+        # 🚨 V18.7 바이오 및 초극대 변동성(롱 배팅) 종목 추가 편입
+        "WATCH": {"NVDL":"NVDL", "BITX":"BITX", "ETHU":"ETHU", "SOXL":"SOXL", "MSTR":"MSTR", "TQQQ":"TQQQ", "TSLA":"TSLA", "LABU":"LABU", "VKTX":"VKTX", "CONL":"CONL", "COIN":"COIN", "COST":"COST", "AVGO":"AVGO", "ORCL":"ORCL"}
     }
     data_pool = {}
     for cat, group in assets.items():
@@ -33,23 +31,25 @@ def fetch_extensive_data():
             except:
                 data_pool[sym] = {"name": name, "price": 0.0, "chg": 0.0, "history": [0,0]}
     
-    # USDT/USDC KRW 계산 (김프 1% 가정보정)
+    # USDT/USDC 원화 환산
     krw_rate = data_pool.get("USDKRW=X", {}).get("price", 1400.0)
     
     usdt_usd = data_pool.get("USDT-USD", {}).get("price", 1.0)
-    data_pool["USDT_KRW_CALC"] = {"name": "USDT(원)", "price": usdt_usd * krw_rate * 1.01, "chg": data_pool.get("USDT-USD", {}).get("chg", 0.0), "history": [0,0]}
+    usdt_chg = data_pool.get("USDT-USD", {}).get("chg", 0.0)
+    data_pool["USDT_KRW_CALC"] = {"name": "USDT(원)", "price": usdt_usd * krw_rate * 1.01, "chg": usdt_chg, "history": [0,0]}
 
     usdc_usd = data_pool.get("USDC-USD", {}).get("price", 1.0)
-    data_pool["USDC_KRW_CALC"] = {"name": "USDC(원)", "price": usdc_usd * krw_rate * 1.01, "chg": data_pool.get("USDC-USD", {}).get("chg", 0.0), "history": [0,0]}
+    usdc_chg = data_pool.get("USDC-USD", {}).get("chg", 0.0)
+    data_pool["USDC_KRW_CALC"] = {"name": "USDC(원)", "price": usdc_usd * krw_rate * 1.01, "chg": usdc_chg, "history": [0,0]}
 
     return data_pool
 
 def ai_meeting_results():
-    # 🚨 V18.5 신설: 超越 야수 (Transcendent Beast) - 재미용 초극대 변동성 리포트
+    # 🚨 V18.7 초월 야수 팩트 세팅 (바이오/코인 레버리지 롱 타겟 & 한강뷰 멘트)
     ultra_beast = {
         "title": "🌌 超越 야수 (재미용 - 초극대 변동성)",
-        "ticker": "NVDL, BITX, SOXS",
-        "reason": "위원회 분석 결과: 도파민 최극대화 구간. 하루 20% 이상의 폭등락을 감당 가능한 영혼만 입장 허가. 한강뷰 vs 한강물. 1%의 미친 야수만 요격 가능한 영역."
+        "ticker": "LABU, VKTX, CONL",
+        "reason": "한강뷰 vs 한강물"
     }
 
     summary = {
@@ -62,12 +62,12 @@ def ai_meeting_results():
         {"title": "🔥 싸나이테스트 (엄선)", "ticker": "ETHU, SOXL, MSTR", "reason": "위원회 만장일치 엄선. 변동성 상위 1% 정예. 숏스퀴즈 타점 및 광기 수급 포착."},
         {"title": "🏃‍♂️ 평범이의 숟가락 (엄선)", "ticker": "TQQQ, NVDA, TSLA", "reason": "추세 추종 매매 최적화. 스마트 머니 유입 및 눌림목 반등 구간."},
         {"title": "🛡️ 쫄보들의 안식처 (엄선)", "ticker": "SCHD, TLT, IAU", "reason": "위원회 자산 방어 분과 엄선. 하방 경직성 및 배당 안전성 1위."},
-        {"title": "🕵️ 세력 형님 뒤쫓기 (엄선)", "ticker": "LABU, COIN, MARA", "reason": "온체인 대량 매집 시그널 포착. 공매도 항복 임박한 리버설 타점 요격."}
+        {"title": "🕵️ 세력 형님 뒤쫓기 (엄선)", "ticker": "BITX, COIN, NVDL", "reason": "초월 야수 편입 탈락 후발주자. 대량 매집 시그널 포착 및 숏커버링 대기."}
     ]
     options = [
         {"t": "NVDA", "d": "03-20", "p": "135.0", "s": "콜옵션 프리미엄 과열. 135불 수렴 예상."},
         {"t": "TSLA", "d": "03-20", "p": "210.0", "s": "맥스페인 부근 횡보 유지. 돌파 시 헤지 매수 폭증."},
-        {"t": "SOXL", "d": "03-20", "p": "45.0", "s": "숏스퀴즈 타점 대기. 세력들 하단 42불 강력 지지 중."},
+        {"t": "LABU", "d": "03-27", "p": "125.0", "s": "바이오 수급 유입 시작. 리버설 상방 압력 감지."},
         {"t": "MSTR", "d": "03-20", "p": "1650", "s": "비트코인 변동성 직결. 콜 프리미엄 과열 주의."},
         {"t": "AVGO", "d": "03-20", "p": "140.0", "s": "어닝 서프라이즈 이후 콜옵션 대량 매집 포착."}
     ]
@@ -131,13 +131,13 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
 
         summary_html = "".join([f'<div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[{k}]</span><span class="text-zinc-600 dark:text-zinc-300 text-xs font-bold leading-relaxed">{v}</span></div>' for k,v in summary.items()])
 
-        # 🚨 V18.5 신설: 초월 야수 HTML 생성
+        # 🚨 V18.7 초월 야수 디자인 변경 ("한강뷰 vs 한강물" 폰트 크기 극대화)
         ultra_beast_html = f'''
-        <div class="bg-zinc-900 p-8 rounded-3xl border-4 border-dashed border-[#D4AF37] shadow-2xl animate-pulse mb-8 text-center relative overflow-hidden">
-            <div class="absolute -right-10 -top-10 text-[200px] opacity-10 font-black italic">!</div>
+        <div class="bg-zinc-900 p-8 rounded-3xl border-4 border-dashed border-red-600 shadow-2xl shadow-red-500/20 animate-pulse mb-8 text-center relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 text-[200px] text-red-500 opacity-5 font-black italic">!</div>
             <h2 class="text-3xl font-black text-white italic tracking-tighter mb-4">{ultra_beast['title']}</h2>
-            <div class="bg-[#D4AF37]/20 p-4 rounded-xl mb-4 text-[#D4AF37] font-black text-sm border-2 border-white/10 tracking-[0.3em] inline-block">{ultra_beast['ticker']}</div>
-            <p class="text-zinc-400 text-sm font-bold leading-relaxed max-w-2xl mx-auto">{ultra_beast['reason']}</p>
+            <div class="bg-red-500/20 p-4 rounded-xl mb-6 text-red-500 font-black text-xl border-2 border-red-500/30 tracking-[0.3em] inline-block">{ultra_beast['ticker']}</div>
+            <p class="text-red-500 text-4xl font-black italic leading-relaxed drop-shadow-[0_0_15px_rgba(239,68,68,0.8)] tracking-tighter">{ultra_beast['reason']}</p>
         </div>'''
 
         rec_cards = "".join([f'''
@@ -180,19 +180,17 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
                     </div>
                 </div>'''
 
-        # 베이스 HTML 템플릿 (replace 방식 - 완벽 복구)
         base_html = """
         <!DOCTYPE html>
         <html lang="ko" class="dark">
         <head>
             <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>연신내 개미펀드 V18.5</title>
+            <title>연신내 개미펀드 V18.7</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
                 body { font-family: 'Noto Sans KR', sans-serif; transition: background-color 0.3s; }
-                /* 🚨 빙글빙글 회전 애니메이션 복구! (6s 속도로 빠르게 회전) */
                 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
                 .ant-logo { animation: spin 8s linear infinite; transition: transform 0.3s; filter: drop-shadow(0 0 10px rgba(212,175,55,0.4)); }
                 .ant-logo:hover { animation-play-state: paused; transform: scale(1.1); }
@@ -207,7 +205,7 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
             <div class="p-6 md:p-12 max-w-7xl mx-auto">
                 <header class="flex flex-col md:flex-row justify-between items-center mb-12 border-b border-zinc-200 dark:border-zinc-900 pb-10 gap-8 gap-y-6">
                     <div class="flex items-center gap-8">
-                        <img src="ax.jpg" onerror="this.onerror=null; this.src='https://i.ibb.co/v6XkYvR/ax-removebg.png'" class="ant-logo w-24 h-24 object-contain" alt="야수">
+                        <img src="ax.png" onerror="this.onerror=null; this.src='ax.jpg'; this.onerror=function(){this.onerror=null; this.src='https://i.ibb.co/v6XkYvR/ax-removebg.png'};" class="ant-logo w-24 h-24 object-contain" alt="야수">
                         <div>
                             <h1 class="text-5xl font-black text-zinc-900 dark:text-white italic tracking-tighter mb-2">연신내 개미펀드</h1>
                             <p class="text-red-500 font-black text-xs tracking-widest mb-1 uppercase">모든 투자는 본인의 책임입니다.</p>
@@ -266,10 +264,9 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
         </html>
         """
         
-        # 안전한 치환으로 최종 조립
         history_json = json.dumps({sym: d.get('history', [0,0]) for sym, d in data.items()})
         final_html = base_html.replace("__CURRENCY__", currency_html)
-        final_html = final_html.replace("__ULTRA_BEAST__", ultra_beast_html) #
+        final_html = final_html.replace("__ULTRA_BEAST__", ultra_beast_html)
         final_html = final_html.replace("__NOW__", now)
         final_html = final_html.replace("__INDEX__", index_cards)
         final_html = final_html.replace("__SUMMARY__", summary_html)
@@ -280,7 +277,7 @@ def generate_html(data, ultra_beast, summary, recs, options, earnings):
 
         with open("index.html", "w", encoding="utf-8") as f:
             f.write(final_html)
-        logger.info("V18.5 HTML successfully generated.")
+        logger.info("V18.7 HTML successfully generated.")
 
     except Exception as e:
         logger.error(f"Generation Error: {e}")
