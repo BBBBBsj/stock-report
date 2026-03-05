@@ -1,2 +1,109 @@
 
+    <!DOCTYPE html>
+    <html lang="ko" class="dark">
+    <head>
+        <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>연신내 개미펀드 V17.2</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+            body { font-family: 'Noto Sans KR', sans-serif; transition: background-color 0.3s; }
+            @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            .ant-logo { animation: spin 20s linear infinite; filter: drop-shadow(0 0 10px rgba(212,175,55,0.4)); }
+        </style>
+        <script>
+            tailwind.config = { darkMode: 'class' };
+            function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+        </script>
+    </head>
+    <body class="bg-zinc-50 dark:bg-[#0d0d0d] text-zinc-900 dark:text-zinc-300">
+        <div class="flex gap-6 p-4 bg-white dark:bg-[#151515] border-b border-zinc-200 dark:border-zinc-800 overflow-x-auto">
+            <div class="flex items-center gap-3">
+                <span class="text-[11px] font-bold text-zinc-500">💵 원/달러</span>
+                <span class="text-sm font-black text-zinc-900 dark:text-white">1,463.97</span>
+            </div>
+            <div class="flex items-center gap-3 border-l border-zinc-800 pl-6">
+                <span class="text-[11px] font-bold text-zinc-500">🔗 USDT/USDC</span>
+                <span class="text-sm font-black text-zinc-900 dark:text-white">$1.0001</span>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-12 max-w-7xl mx-auto">
+            <header class="flex flex-col md:flex-row justify-between items-center mb-12 border-b border-zinc-200 dark:border-zinc-900 pb-10 gap-8">
+                <div class="flex items-center gap-8">
+                    <img src="ax.png" onerror="this.src='https://i.ibb.co/v6XkYvR/ax-removebg.png'" class="ant-logo w-24 h-24 object-contain">
+                    <div>
+                        <h1 class="text-5xl font-black text-zinc-900 dark:text-white italic tracking-tighter mb-2">연신내 개미펀드</h1>
+                        <p class="text-red-500 font-black text-xs tracking-widest uppercase">모든 투자는 본인의 책임입니다.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleTheme()" class="p-3 bg-white dark:bg-[#1e1e1e] border border-zinc-200 dark:border-zinc-800 rounded-full shadow-lg">🌓 테마 전환</button>
+                    <div class="text-right p-4 bg-white dark:bg-[#151515] rounded-xl border border-zinc-200 dark:border-zinc-900 shadow-sm">
+                        <p class="text-sm font-black text-zinc-900 dark:text-white italic">2026-03-05 16:12</p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-16">
+                <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-md">
+            <h3 class="text-zinc-900 dark:text-white font-black text-lg mb-3 italic tracking-tighter">🔥 싸나이테스트 (엄선)</h3>
+            <div class="bg-[#D4AF37]/10 p-3 rounded-lg mb-3 text-[#D4AF37] font-black text-xs border border-[#D4AF37]/20">ETHU, SOXL, MSTR</div>
+            <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed">변동성 및 수급 교차 검증 완료. 숏스퀴즈 발생 확률 상위 1% 종목군.</p>
+        </div>
+        
+        <div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-md">
+            <h3 class="text-zinc-900 dark:text-white font-black text-lg mb-3 italic tracking-tighter">🏃‍♂️ 평범이의 숟가락 (엄선)</h3>
+            <div class="bg-[#D4AF37]/10 p-3 rounded-lg mb-3 text-[#D4AF37] font-black text-xs border border-[#D4AF37]/20">TQQQ, NVDA, TSLA</div>
+            <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed">개미들의 스마트 머니 유입 확인. 눌림목 구간에서 숟가락 얹기 최적화.</p>
+        </div>
+        
+        <div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-md">
+            <h3 class="text-zinc-900 dark:text-white font-black text-lg mb-3 italic tracking-tighter">🛡️ 쫄보들의 안식처 (엄선)</h3>
+            <div class="bg-[#D4AF37]/10 p-3 rounded-lg mb-3 text-[#D4AF37] font-black text-xs border border-[#D4AF37]/20">SCHD, TLT, IAU</div>
+            <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed">자산 방어 분과 회의 결과. 하방 경직성이 가장 뛰어난 철벽 포트폴리오.</p>
+        </div>
+        
+        <div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-md">
+            <h3 class="text-zinc-900 dark:text-white font-black text-lg mb-3 italic tracking-tighter">🕵️ 세력 형님 뒤쫓기 (엄선)</h3>
+            <div class="bg-[#D4AF37]/10 p-3 rounded-lg mb-3 text-[#D4AF37] font-black text-xs border border-[#D4AF37]/20">LABU, COIN, MARA</div>
+            <p class="text-zinc-500 dark:text-zinc-400 text-xs font-medium leading-relaxed">온체인 데이터 및 대량 매집 시그널 포착. 세력들의 매집 단가 부근 안착.</p>
+        </div>
+        </div>
+                <div class="bg-white dark:bg-[#151515] p-8 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl">
+                    <h3 class="text-[11px] font-black text-zinc-500 mb-6 uppercase border-l-4 border-[#D4AF37] pl-4 tracking-widest">실적 발표 (7D)</h3>
+                    <p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">03-05 (오늘)</p>
+            <div class="flex items-center justify-between p-3 rounded-xl border border-[#D4AF37] bg-[#D4AF37]/5 mb-3 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <img src="https://logo.clearbit.com/costco.com" class="w-8 h-8 rounded-lg bg-white p-1" onerror="this.src='https://via.placeholder.com/32?text=COST'">
+                    <div><p class="text-xs font-black text-zinc-900 dark:text-white">Costco<span class="bg-[#D4AF37] text-black text-[8px] px-1 rounded font-black ml-2">LONG</span></p></div>
+                </div>
+                <span class="text-[10px] font-bold text-zinc-400">장후</span>
+            </div><p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">03-09 (월)</p>
+            <div class="flex items-center justify-between p-3 rounded-xl border border-[#D4AF37] bg-[#D4AF37]/5 mb-3 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <img src="https://logo.clearbit.com/oracle.com" class="w-8 h-8 rounded-lg bg-white p-1" onerror="this.src='https://via.placeholder.com/32?text=ORCL'">
+                    <div><p class="text-xs font-black text-zinc-900 dark:text-white">Oracle<span class="bg-[#D4AF37] text-black text-[8px] px-1 rounded font-black ml-2">LONG</span></p></div>
+                </div>
+                <span class="text-[10px] font-bold text-zinc-400">장후</span>
+            </div><p class="text-[10px] font-black text-[#D4AF37] mb-3 border-b border-zinc-100 dark:border-zinc-800 pb-1">03-11 (수)</p>
+            <div class="flex items-center justify-between p-3 rounded-xl border border-[#D4AF37] bg-[#D4AF37]/5 mb-3 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <img src="https://logo.clearbit.com/broadcom.com" class="w-8 h-8 rounded-lg bg-white p-1" onerror="this.src='https://via.placeholder.com/32?text=AVGO'">
+                    <div><p class="text-xs font-black text-zinc-900 dark:text-white">Broadcom<span class="bg-[#D4AF37] text-black text-[8px] px-1 rounded font-black ml-2">LONG</span></p></div>
+                </div>
+                <span class="text-[10px] font-bold text-zinc-400">장후</span>
+            </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const allHistory = {"USDKRW=X": [1439.99, 1426.93, 1432.32, 1438.5, 1452.27, 1483.07, 1463.97], "USDT-USD": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "^KS11": [5969.64, 6083.86, 6307.27, 6244.13, 5791.91, 5093.54, 5583.9], "^IXIC": [22863.68, 23152.08, 22878.38, 22668.21, 22748.86, 22516.69, 22807.48], "^GSPC": [6890.07, 6946.13, 6908.86, 6878.88, 6881.62, 6816.63, 6869.5], "^VIX": [19.55, 17.93, 18.63, 19.86, 21.44, 23.57, 21.15], "BTC-USD": [65881.8, 66995.86, 65738.1, 68775.85, 68293.65, 72710.58, 72478.98], "ETH-USD": [1930.76, 1965.05, 1939.07, 2027.27, 1982.77, 2126.51, 2126.14], "SOXL": [68.53, 71.86, 65.34, 62.77, 62.76, 53.42, 56.62], "MSTR": [124.61, 135.65, 133.4, 129.5, 137.65, 132.68, 146.44], "TQQQ": [49.78, 51.87, 50.05, 49.52, 49.7, 48.1, 50.26], "ETHU": [18.78, 23.25, 22.03, 19.77, 22.16, 20.85, 24.53], "LABU": [179.4, 176.87, 173.7, 172.7, 169.5, 156.86, 168.12], "COST": [998.43, 994.76, 986.74, 1010.79, 1002.77, 1007.77, 1006.74], "AVGO": [325.49, 332.31, 321.7, 319.55, 318.82, 313.84, 317.53], "ORCL": [146.14, 147.89, 150.31, 145.4, 149.25, 149.01, 152.37]};
+            // 차트 함수 및 기타 자바스크립트...
+        </script>
+    </body>
+    </html>
     
