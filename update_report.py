@@ -2,18 +2,19 @@ import yfinance as yf
 import datetime
 import json
 import logging
-import pandas as pd
-import numpy as np
 
-# [V13.0] 15인 위원회 최종 통합 엔진 가동
 logging.basicConfig(level=logging.INFO)
 
 def fetch_extensive_data():
-    # 팩트 기반 데이터 수집 (지수, 자산, 타겟 종목)
+    # 데이터 수집 범위를 고위험 섹터(레버리지, 바이오, 코인주)로 대폭 확장
     assets = {
         "INDEX": {"코스피": "^KS11", "나스닥": "^IXIC", "S&P500": "^GSPC", "공포지수": "^VIX"},
-        "ALT": {"비트코인": "BTC-USD", "금": "GC=F", "원유": "CL=F"},
-        "TARGETS": {"SOXL": "SOXL", "MSTR": "MSTR", "TQQQ": "TQQQ", "TSLA": "TSLA", "NVDA": "NVDA", "BITX": "BITX", "XBI": "XBI"}
+        "ALT": {"비트코인": "BTC-USD", "이더리움": "ETH-USD", "금": "GC=F", "원유": "CL=F"},
+        "TARGETS": {
+            "SOXL": "SOXL", "MSTR": "MSTR", "TQQQ": "TQQQ", "ETHU": "ETHU", 
+            "NVDL": "NVDL", "MARA": "MARA", "XBI": "XBI", "LABU": "LABU",
+            "TSLA": "TSLA", "NVDA": "NVDA", "COIN": "COIN"
+        }
     }
     data_pool = {}
     for cat, group in assets.items():
@@ -30,43 +31,47 @@ def fetch_extensive_data():
     return data_pool
 
 def ai_beast_meeting(d):
-    # 1. 섹터별 압축 요약 (지정학 리스크 및 수급 팩트)
+    # 1. 섹터별 팩트 요약 (위험도 상향)
     sector_summary = {
-        "반도체": "공매도 잔고 임계점 도달. 숏스퀴즈 발생 시 폭발적 상방 에너지 축적됨. ETF 자금 유입 지속.",
-        "빅테크": "금리 인하 기대감으로 인한 기관 수급 대유입. QQQ 자금 유입이 하방 지지선 강력 구축 중.",
-        "지정학": "중동 긴장 고조로 유가 및 금값 변동성 확대. 전쟁 리스크가 증시 상단 저항선으로 작용.",
-        "코인/기타": "비트코인 70k 돌파 시도 중. MSTR 등 관련주 유동성 집중 및 옵션 변동성 극대화 구간."
+        "초고위험": "이더리움 2배(ETHU) 및 비트코인 채굴주(MARA) 수급 폭발. 야수들의 자금이 레버리지로 집중됨.",
+        "바이오": "XBI/LABU 바닥권 매집 포착. 금리 인하 기대감에 세력들 바이오 섹터 숏커버링 본격화.",
+        "반도체": "SOXL 공매도 잔고 임계점. 엔비디아 실적 발표 전후로 역사적 숏스퀴즈 시나리오 가동 중.",
+        "지정학": "중동 발 에너지원 확보 경쟁 및 전쟁 리스크 지속. 안전자산(금)과 위험자산(코인) 동반 상승 기현상."
     }
 
-    # 2. 4대 투자 성향별 종목 (일자 배치)
+    # 2. 투자 성향별 4대 천왕 (종목 대폭 추가)
     recs = [
-        {"title": "🔥 싸나이테스트", "ticker": "SOXL, MSTR, BITX", "reason": "거래량 실린 돌파 시그널. 외인/기관 광기 수급. 숏커버링 폭발 임박 구간."},
-        {"title": "🏃‍♂️ 평범이의 숟가락", "ticker": "QQQ, VOO, AAPL", "reason": "지수 대장주 중심의 안정적 우상향. 실적 기반 매수세 탄탄. 분할 매수 적기."},
-        {"title": "🛡️ 쫄보들의 안식처", "ticker": "TLT, IAU, SCHD", "reason": "하방 경직성 확보. 금리 하락 수혜 채권과 안전자산 금으로 계좌 방어막 구축."},
-        {"title": "🕵️ 세력 형님 뒤쫓기", "ticker": "TSLA, XBI, COIN", "reason": "바닥권 매집 물량 포착. 공매도 세력 항복(숏스퀴즈) 임박. 리버설 타점 공략."}
+        {"title": "🔥 싸나이테스트 (경주마)", "ticker": "ETHU, SOXL, MARA, NVDL", "reason": "퀀트: 변동성 지수 폭발. 수급: 외인 무지성 풀매수. 한강 아니면 펜트하우스, 야성 그 자체."},
+        {"title": "🏃‍♂️ 평범이의 숟가락", "ticker": "TQQQ, QQQ, AAPL, MSFT", "reason": "거시: 우상향 추세 확정. 기관: 하단 지지선 강력 구축. 남들 벌 때 소외되지 않는 안전 빵 전략."},
+        {"title": "🛡️ 쫄보들의 안식처", "ticker": "TLT, IAU, XLF, SCHD", "reason": "리스크: 하방 경직성 확보. 배당과 금으로 계좌 방어. 시장이 발작해도 발 뻗고 자는 전략."},
+        {"title": "🕵️ 세력 형님 뒤쫓기", "ticker": "LABU(바이오3배), COIN, TSLA", "reason": "수급: 세력들 바닥 매집 완료 시그널. 공매도 세력 손절(숏스퀴즈) 임박한 리버설 타점."}
     ]
 
-    # 3. 옵션 만기 & 맥스페인 분석
+    # 3. 주요 옵션 분석 (10개로 확장)
     options = [
-        {"t": "NVDA", "date": "03-20", "pain": "135.0", "strat": "140불 콜 매도 우세. 만기일 전 135불 수렴 가능성 농후."},
-        {"t": "TSLA", "date": "03-20", "pain": "210.0", "strat": "맥스페인 부근 횡보. 220불 돌파 시 헤지 물량 폭등 주의."},
-        {"t": "BTC", "date": "03-27", "pain": "68k", "strat": "월말 대규모 만기 예정. 70k 상단 저항선 및 눌림목 지지 체크."},
-        {"t": "QQQ", "date": "03-13", "pain": "485.0", "strat": "위클리 만기 변동성 활용. 480불 하단 지지 확인 후 대응."},
-        {"t": "SPY", "date": "03-20", "pain": "515.0", "strat": "네 마녀의 날 대비 현금 비중 조절 및 변동성 매매 유효."}
+        {"t": "NVDA", "d": "03-20", "p": "135.0", "s": "콜옵션 대량 매집 확인. 140불 돌파 시세 분출 기대."},
+        {"t": "TSLA", "d": "03-20", "p": "210.0", "s": "맥스페인 부근 횡보. 세력들 변동성 죽이기 작업 중."},
+        {"t": "MSTR", "d": "03-20", "p": "1600", "s": "코인 변동성 직결. 콜옵션 프리미엄 과열 구간 주의."},
+        {"t": "ETHU", "d": "03-27", "p": "15.0", "s": "이더리움 시세 수렴. 만기 전 상방 압력 강함."},
+        {"t": "SOXL", "d": "03-20", "p": "45.0", "s": "숏스퀴즈 타점 대기. 세력들 하단 40불 지지 강력."},
+        {"t": "AAPL", "d": "03-20", "p": "230.0", "s": "기관 풋매도 우세. 하방 막혀있는 안정적 흐름."},
+        {"t": "MARA", "d": "03-20", "p": "25.0", "s": "채굴주 변동성 폭발. 옵션 시장 세력 매수세 대입."},
+        {"t": "LABU", "d": "03-27", "p": "120.0", "s": "바이오 수급 유입. 만기일 전 리버설 타점 포착."},
+        {"t": "QQQ", "d": "03-13", "p": "485.0", "s": "위클리 만기 변동성. 490불 돌파 시 상방 오픈."},
+        {"t": "BITX", "d": "03-27", "p": "40.0", "s": "비트코인 2배 옵션 광기. 세력들 상단 매도 벽 구축."}
     ]
 
-    # 4. 경제 지표 캘린더
     events = [
-        {"d": "오늘", "e": "트럼프 경제 특보 긴급 연설 / 주요 기술주 장 마감 후 실적 발표"},
-        {"d": "내일", "e": "비농업 고용 지표 발표 (나스닥 향방 결정타) / 연준 위원 발언"},
-        {"d": "만기", "e": "03-20 미국 옵션 만기일 (네 마녀의 날 - 역사적 변동성 주의)"}
+        {"d": "오늘", "e": "트럼프 경제 정책 세부 브리핑 / 이더리움 현물 수급 보고서"},
+        {"d": "내일", "e": "고용 지표 발표 및 연준 의장 발언 (나스닥 향방 결정)"},
+        {"d": "만기", "e": "03-20 미국 쿼드러플 위칭데이 (역대급 변동성 예고)"}
     ]
     
     return sector_summary, recs, options, events
 
 def generate_html(data, summary, recs, options, events):
     now = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M')
-    # 대표님께서 업로드하신 파일명(ax.png)으로 정확히 고정
+    # 이미지 경로: ax.png가 있으면 사용, 없으면 글자 출력
     ant_face_url = "ax.png"
     history_json = {sym: d['history'] for sym, d in data.items()}
 
@@ -84,7 +89,7 @@ def generate_html(data, summary, recs, options, events):
         '''
 
     cards_indices = "".join([get_card(s, data[s]) for s in ["^KS11", "^IXIC", "^GSPC", "^VIX", "BTC-USD", "GC=F", "CL=F"]])
-    summary_html = "".join([f'<div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[{k}]</span><span class="text-zinc-300 text-xs font-bold leading-relaxed">{v}</span></div>' for k,v in summary.items()])
+    summary_html = "".join([f'<div class="mb-2"><span class="text-[#D4AF37] font-black text-xs mr-2">[{k}]</span><span class="text-zinc-300 text-xs font-bold">{v}</span></div>' for k,v in summary.items()])
     
     rec_cards = "".join([f'''
         <div class="group relative bg-[#1e1e1e] p-5 rounded-2xl border border-zinc-800 hover:border-[#D4AF37]/40 transition shadow-lg cursor-pointer" onmouseenter="showChart('{r['ticker'].split(', ')[0]}')">
@@ -98,10 +103,10 @@ def generate_html(data, summary, recs, options, events):
         <div class="bg-[#151515] p-4 rounded-xl border border-zinc-800">
             <div class="flex justify-between mb-1 border-b border-zinc-800 pb-1">
                 <span class="text-white font-black text-xs">{o['t']}</span>
-                <span class="text-red-500 text-[9px] font-bold">{o['date']} 만기</span>
+                <span class="text-red-500 text-[9px] font-bold">{o['d']}</span>
             </div>
-            <div class="flex justify-between my-1"><span class="text-zinc-600 text-[9px] font-bold uppercase">Max Pain</span><span class="text-white font-black text-[10px]">{o['pain']}</span></div>
-            <p class="text-zinc-400 text-[10px] leading-tight font-bold">{o['strat']}</p>
+            <div class="flex justify-between my-1"><span class="text-zinc-600 text-[9px] font-bold uppercase tracking-tighter">MAX PAIN</span><span class="text-white font-black text-[10px]">{o['p']}</span></div>
+            <p class="text-zinc-400 text-[10px] leading-tight font-bold" style="word-break: keep-all;">{o['s']}</p>
         </div>
     ''' for o in options])
 
@@ -112,42 +117,39 @@ def generate_html(data, summary, recs, options, events):
     <html lang="ko">
     <head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>연신내 개미펀드 V13</title>
+        <title>연신내 개미펀드 V14</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
             body {{ background-color: #0d0d0d; color: #d1d1d1; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; letter-spacing: -0.03em; -webkit-font-smoothing: antialiased; }}
             @keyframes spin {{ 0% {{ transform: rotate(0deg); }} 100% {{ transform: rotate(360deg); }} }}
-            .ant-logo {{ width: 90px; height: 90px; object-fit: contain; animation: spin 15s linear infinite; filter: drop-shadow(0 0 12px rgba(212,175,55,0.4)); }}
+            .ant-logo {{ width: 95px; height: 95px; object-fit: contain; animation: spin 15s linear infinite; filter: drop-shadow(0 0 12px rgba(212,175,55,0.4)); }}
+            .beast-font {{ font-weight: 900; font-style: italic; }}
         </style>
     </head>
     <body class="p-4 md:p-8">
         <div class="max-w-7xl mx-auto">
             <header class="flex flex-col md:flex-row justify-between items-center mb-10 border-b border-zinc-900 pb-8 gap-6">
                 <div class="flex items-center gap-8">
-                    <img src="{ant_face_url}" class="ant-logo" alt="야수">
+                    <img src="{ant_face_url}" onerror="this.outerHTML='<div class=\\'ant-logo flex items-center justify-center text-[#D4AF37] font-black text-xl border-2 border-[#D4AF37] rounded-full\\'>야수</div>'" class="ant-logo" alt="야수">
                     <div>
                         <h1 class="text-5xl font-black text-white italic tracking-tighter mb-1">연신내 개미펀드</h1>
-                        <p class="text-[#D4AF37] font-black text-[10px] tracking-[0.4em] uppercase">ULTIMATE BEAST TERMINAL V13</p>
+                        <p class="text-[#D4AF37] font-black text-[10px] tracking-[0.4em] uppercase tracking-widest">BEAST MODE TERMINAL V14.0</p>
                     </div>
                 </div>
-                <div class="text-right p-4 bg-[#151515] rounded-xl border border-zinc-900 shadow-2xl">
-                    <p class="text-[9px] text-zinc-600 font-black mb-1 uppercase tracking-widest">KST Sync</p>
-                    <p class="text-sm font-black text-white italic">{now}</p>
-                </div>
+                <div class="text-right p-4 bg-[#151515] rounded-xl border border-zinc-900"><p class="text-[9px] text-zinc-600 font-black mb-1 uppercase">KST Sync</p><p class="text-sm font-black text-white italic">{now}</p></div>
             </header>
 
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-10">{cards_indices}</div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
                 <div class="lg:col-span-2 bg-[#151515] p-8 rounded-3xl border border-zinc-900 shadow-2xl relative overflow-hidden">
-                    <div class="absolute -right-10 -bottom-10 opacity-5 text-[150px] font-black italic">FACT</div>
-                    <h2 class="text-2xl font-black text-white mb-6 italic">🏛️ 금일 섹터 요약 브리핑</h2>
+                    <h2 class="text-2xl font-black text-white mb-6 italic">🏛️ 금일 섹터 요약 브리핑 (Fact Only)</h2>
                     <div class="space-y-1 relative z-10">{summary_html}</div>
                 </div>
                 <div class="bg-[#151515] p-6 rounded-3xl border border-zinc-900 shadow-2xl">
-                    <h3 class="text-[10px] font-black text-zinc-500 mb-4 uppercase border-l-4 border-[#D4AF37] pl-3 tracking-widest">경제 지표 캘린더</h3>
+                    <h3 class="text-[10px] font-black text-zinc-500 mb-4 uppercase border-l-4 border-[#D4AF37] pl-3 tracking-widest">나스닥 경제 지표 캘린더</h3>
                     <div class="bg-black/20 rounded-xl border border-zinc-800">{event_html}</div>
                 </div>
             </div>
@@ -155,9 +157,9 @@ def generate_html(data, summary, recs, options, events):
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">{rec_cards}</div>
 
             <h2 class="text-[10px] font-black text-zinc-600 mb-6 tracking-[0.3em] uppercase flex items-center gap-3">
-                <span class="w-10 h-[1px] bg-zinc-900"></span> 옵션 세력 분석 & 맥스페인 (타점 가이드)
+                <span class="w-10 h-[1px] bg-zinc-900"></span> 세력 옵션 타점 & MAX PAIN (TOP 10)
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-10">{option_html}</div>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-10">{option_html}</div>
         </div>
         <script>
             const allHistory = {json.dumps(history_json)};
@@ -169,7 +171,7 @@ def generate_html(data, summary, recs, options, events):
                     grid: {{ top: 10, bottom: 10, left: 10, right: 10 }},
                     xAxis: {{ type: 'category', show: false }},
                     yAxis: {{ type: 'value', show: false, min: 'dataMin', max: 'dataMax' }},
-                    series: [{{ data: allHistory[sym], type: 'line', smooth: true, symbol: 'none', lineStyle: {{ color: '#D4AF37', width: 2 }}, areaStyle: {{ color: 'rgba(212,175,55, 0.05)' }} }}]
+                    series: [{{ data: allHistory[sym], type: 'line', smooth: true, symbol: 'none', lineStyle: {{ color: '#D4AF37', width: 2 }}, areaStyle: {{ color: 'rgba(212, 175, 55, 0.05)' }} }}]
                 }});
             }}
         </script>
