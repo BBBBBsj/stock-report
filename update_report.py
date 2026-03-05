@@ -48,7 +48,7 @@ def generate_html(data, vix, wti, ndx):
     else: status = "극단적 탐욕"
 
     brief = "국내 박스권 횡보 중이며 미국 기술주 중심의 쏠림이 강합니다."
-    geo = "이란-이스라엘 분쟁 등 중동 리스크가 유가에 하방 압력을 줄 수 있습니다."
+    geo = "지정학 리스크가 유가에 영향을 줄 수 있으니 주의하세요."
     if wti > 80: geo = "⚠️ 중동 지정학 리스크 고조! 원유 및 안전자산 비중을 늘리세요."
     
     alerts = "✅ 시장 특이사항 없음"
@@ -59,4 +59,91 @@ def generate_html(data, vix, wti, ndx):
     def cards(d):
         res = ""
         for n, i in d.items():
-            c = "text-red-500" if i['is_up'] else "text-blue-500"
+            c = "text-red-500 font-bold" if i['is_up'] else "text-blue-500 font-bold"
+            bold = "font-black" if i['val'] > 1.5 else ""
+            res += f'<div class="card p-4 rounded-xl border border-zinc-800 transition-all hover:scale-105"><p class="text-muted text-xs font-bold">{n}</p><p class="text-xl font-bold {bold}">{i["price"]}</p><p class="{c} text-xs {bold}">{i["change"]} (RSI {i["rsi"]})</p></div>'
+        return res
+
+    html = f"""
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>연신내 개미 펀드</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+        <style>
+            :root {{ --bg: #120C07; --card: #1A120B; --text: #EAE7B1; --muted: #A3B18A; --accent: #D4AF37; --border: #3C2A21; }}
+            body.light {{ --bg: #F3F4F6; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --accent: #B45309; --border: #D1D5DB; }}
+            body {{ background: var(--bg); color: var(--text); transition: 0.3s; font-family: sans-serif; }}
+            .card {{ background: var(--card); border-color: var(--border); }}
+            .text-muted {{ color: var(--muted); }} .text-accent {{ color: var(--accent); }}
+        </style>
+    </head>
+    <body>
+        <div class="max-w-6xl mx-auto p-4 md:p-8">
+            <header class="flex flex-col md:flex-row justify-between mb-8 border-b border-zinc-800 pb-4 gap-4">
+                <div><h1 class="text-4xl font-black text-accent">🐜 연신내 개미 펀드</h1><p class="text-muted font-bold mt-1">GLOBAL MACRO REPORT V4.0</p></div>
+                <div class="flex gap-4 items-center">
+                    <button onclick="toggleTheme()" class="card px-4 py-2 rounded-full border font-bold shadow-lg">🌗 테마 전환</button>
+                    <div class="card p-2 border text-right text-xs"><p class="text-muted">Last Update (KST)</p><p class="font-bold">{now}</p></div>
+                </div>
+            </header>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card p-4 rounded-xl border flex flex-col items-center shadow-2xl">
+                    <p class="text-muted font-bold mb-2">공포 탐욕 나침반</p>
+                    <div id="g" style="width:100%;height:180px"></div>
+                    <p class="text-2xl font-black">{status}</p>
+                </div>
+                <div class="card p-6 rounded-xl border md:col-span-2 shadow-2xl">
+                    <h2 class="text-xl font-bold text-accent mb-4 border-b border-zinc-800 pb-2">📊 AI 에이전트 긴급 회의록</h2>
+                    <p class="mb-3 text-sm"><strong>📈 유동성 분석:</strong> {brief}</p>
+                    <p class="mb-3 text-sm"><strong>🌍 지정학 리스크:</strong> {geo}</p>
+                    <p class="text-red-500 font-bold text-sm bg-red-500/10 p-2 rounded">{alerts}</p>
+                </div>
+            </div>
+
+            <h2 class="text-muted font-bold mb-4 border-b border-zinc-800 pb-1 uppercase text-xs tracking-widest">🌐 글로벌 증시 지표</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-10">{cards(data['Global Equity'])}</div>
+
+            <h2 class="text-muted font-bold mb-4 border-b border-zinc-800 pb-1 uppercase text-xs tracking-widest">🪙 암호화폐 & 원자재</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">{cards(data['Crypto & Commodities'])}</div>
+        </div>
+
+        <script>
+            function toggleTheme() {{
+                document.body.classList.toggle('light');
+                const isLight = document.body.classList.contains('light');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            }}
+            
+            // 로드 시 테마 복구 (기본 다크)
+            if (localStorage.getItem('theme') === 'light') {{
+                document.body.classList.add('light');
+            }}
+
+            var m = echarts.init(document.getElementById('g'));
+            var scoreVal = {score};
+            m.setOption({{
+                series: [{{
+                    type: 'gauge', startAngle: 180, endAngle: 0, min: 0, max: 100,
+                    itemStyle: {{ color: scoreVal < 40 ? '#EF4444' : '#16A34A' }},
+                    progress: {{ show: true, width: 12 }}, pointer: {{ show: false }},
+                    axisLine: {{ lineStyle: {{ width: 12, color: [[1, 'rgba(128,128,128,0.1)']] }} }},
+                    axisTick: {{ show: false }}, splitLine: {{ show: false }}, axisLabel: {{ show: false }},
+                    detail: {{ valueAnimation: true, formatter: '{{value}}', color: 'inherit', fontSize: 32, fontWeight: '900', offsetCenter: [0, '-10%'] }},
+                    data: [{{ value: scoreVal }}]
+                }}]
+            }});
+            window.addEventListener('resize', () => m.resize());
+        </script>
+    </body>
+    </html>
+    """
+    with open("index.html", "w", encoding="utf-8") as f: f.write(html)
+
+if __name__ == "__main__":
+    d, v, w, n = fetch_market_data()
+    generate_html(d, v, w, n)
