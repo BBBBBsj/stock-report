@@ -5,7 +5,7 @@ import logging
 import sys
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("Beast_V19_6")
+logger = logging.getLogger("Beast_V20_2")
 
 def fetch_extensive_data():
     assets = {
@@ -13,7 +13,8 @@ def fetch_extensive_data():
         "INDEX": {"코스피": "^KS11", "나스닥": "^IXIC", "S&P500": "^GSPC", "공포지수": "^VIX"},
         "CRYPTO": {"비트코인": "BTC-USD", "이더리움": "ETH-USD"},
         "COMM": {"금(Gold)": "GC=F", "은(Silver)": "SI=F", "WTI유": "CL=F", "구리": "HG=F"},
-        "BONDS": {"미 국채 2년물": "US2Y=X", "미 국채 10년물": "^TNX"},
+        # 🚨 V20.2: 3년물(US3Y) 및 10년물(^TNX)로 교체 완료
+        "BONDS": {"미 국채 3년물": "US3Y=X", "미 국채 10년물": "^TNX"},
         "WATCH": {"NVDL":"NVDL", "BITX":"BITX", "ETHU":"ETHU", "SOXL":"SOXL", "MSTR":"MSTR", "TQQQ":"TQQQ", "TSLA":"TSLA", "SCHD":"SCHD", "INTC":"INTC", "SNOW":"SNOW", "RIVN":"RIVN", "LABU":"LABU", "VKTX":"VKTX", "CONL":"CONL", "NVDA":"NVDA", "AVGO":"AVGO"}
     }
     data_pool = {}
@@ -44,9 +45,16 @@ def fetch_extensive_data():
 
 def ai_meeting_results():
     eco_events = [
-        {"d": "03-06 (금)", "t": "미국 2월 고용보고서 (NFP)", "desc": "금리 인하 속도 조절의 핵심 지표. 쇼크 시 증시 요동."},
-        {"d": "03-12 (목)", "t": "미국 2월 소비자물가지수 (CPI)", "desc": "인플레이션 재반등 여부 확인. 가장 중요한 매크로 이벤트."},
-        {"d": "03-18 (수)", "t": "FOMC 기준금리 결정 & 파월 연설", "desc": "점도표 발표. 15인 위원회는 '금리 동결 및 매파적 발언' 대비 중."}
+        {"d": "03-06 (금)", "t": "미국 2월 고용보고서 (NFP)", "desc": "고용 냉각 시 금리 인하 기대감 상승.", "odds": "LONG 65% : SHORT 35%"},
+        {"d": "03-12 (목)", "t": "미국 2월 소비자물가지수 (CPI)", "desc": "인플레이션 재반등 우려. 시장 경계감 극대화.", "odds": "LONG 40% : SHORT 60%"},
+        {"d": "03-18 (수)", "t": "FOMC 기준금리 결정 & 연설", "desc": "동결 유력하나 점도표 변화가 핵심.", "odds": "LONG 50% : SHORT 50%"}
+    ]
+
+    human_indicator = [
+        {"site": "에펨코리아 (해외주식)", "status": "환희 (LONG 80%)", "desc": "TQQQ, SOXL 수익 인증 폭주 중. 조정 징후."},
+        {"site": "DC 미주갤", "status": "광기 (LONG 90%)", "desc": "엔비디아, 코인 레버리지 가즈아 도배. 과열 상태."},
+        {"site": "일간베스트 (주게)", "status": "혼돈 (LONG 50%)", "desc": "인버스(숏) 물린 유저 조롱과 신규 진입 교차."},
+        {"site": "글로벌 SNS (X)", "status": "탐욕 (LONG 75%)", "desc": "AI 버블론 축소, 연말 산타랠리 선반영 여론 지배적."}
     ]
 
     ultra_beast = {
@@ -58,7 +66,7 @@ def ai_meeting_results():
 
     summary = {
         "반도체/AI": "엔비디아 하단 지지선 확보. 레버리지(SOXL) 공매도 잔고 임계점 도달로 숏스퀴즈 화약고 상태.",
-        "지정학/거시": "달러 강세 및 지정학적 리스크 지속. 국채 금리 상승세가 기술주 밸류에이션을 압박 중.",
+        "지정학/거시": "달러 강세 및 지정학적 리스크 지속. 국채 금리 변동성이 기술주 밸류에이션을 압박 중.",
         "빅테크": "ETF(QQQ) 자금 유입 가속화. 브로드컴 어닝 서프라이즈 이후 기술주 전반 실적 기대감 고조.",
         "코인/레버리지": "이더리움 현물 수급 폭발. 가상자산 관련주 및 레버리지 종목 변동성 극대화 포착."
     }
@@ -77,14 +85,31 @@ def ai_meeting_results():
         {"t": "AVGO", "d": "03-20", "p": "140.0", "s": "어닝 서프라이즈 이후 콜옵션 대량 매집 포착.", "chart_sym": "AVGO"}
     ]
     earnings = [
-        {"date": "03-04 (발표완료)", "comps": [{"n": "Broadcom", "s": "AVGO", "d": "broadcom.com", "t": "발표 완료", "rec": True, "eps": "$2.05", "rev": "$19.3B", "view": "🔥 AI모멘텀 (어닝 서프라이즈)"}]},
-        {"date": "03-05 (오늘/목)", "comps": [{"n": "Costco", "s": "COST", "d": "costco.com", "t": "장후", "rec": True, "eps": "$4.55", "rev": "$69.3B", "view": "🛡️ 안정적 (HOLD)"}, {"n": "Marvell", "s": "MRVL", "d": "marvell.com", "t": "장후", "rec": False, "eps": "$0.46", "rev": "$1.4B", "view": "가이던스 확인 요망"}]},
-        {"date": "03-09 (월)", "comps": [{"n": "Oracle", "s": "ORCL", "d": "oracle.com", "t": "장후", "rec": True, "eps": "$1.38", "rev": "$13.3B", "view": "클라우드 성장 기대"}]},
-        {"date": "03-11 (수)", "comps": [{"n": "Adobe", "s": "ADBE", "d": "adobe.com", "t": "장후", "rec": False, "eps": "$4.38", "rev": "$5.1B", "view": "AI 수익화 증명 필요"}]}
+        {"date": "03-05 (목)", "comps": [
+            {"n": "Costco", "s": "COST", "d": "costco.com", "t": "장후", "rec": True, "eps": "$3.62", "rev": "$59.1B", "view": "🛡️ 방어력 입증"},
+            {"n": "Marvell", "s": "MRVL", "d": "marvell.com", "t": "장후", "rec": False, "eps": "$0.46", "rev": "$1.4B", "view": "AI 매출 확인"},
+            {"n": "Kroger", "s": "KR", "d": "kroger.com", "t": "장전", "rec": False, "eps": "$1.13", "rev": "$37.1B", "view": "소비 둔화 우려"},
+            {"n": "Burlington", "s": "BURL", "d": "burlington.com", "t": "장전", "rec": True, "eps": "$3.25", "rev": "$3.3B", "view": "할인점 강세"},
+            {"n": "Ross Stores", "s": "ROST", "d": "rossstores.com", "t": "장후", "rec": False, "eps": "$1.65", "rev": "$5.8B", "view": "마진 축소 주의"}
+        ]},
+        {"date": "03-06 (금)", "comps": [
+            {"n": "Foot Locker", "s": "FL", "d": "footlocker.com", "t": "장전", "rec": False, "eps": "$0.32", "rev": "$2.2B", "view": "재고 소진 여부"},
+            {"n": "Big Lots", "s": "BIG", "d": "biglots.com", "t": "장전", "rec": False, "eps": "-$0.25", "rev": "$1.0B", "view": "파산 리스크"},
+            {"n": "Macy's", "s": "M", "d": "macys.com", "t": "장전", "rec": False, "eps": "$1.98", "rev": "$8.0B", "view": "가이던스 하향 우려"},
+            {"n": "Nordstrom", "s": "JWN", "d": "nordstrom.com", "t": "장후", "rec": True, "eps": "$0.88", "rev": "$4.3B", "view": "럭셔리 소비 반등"},
+            {"n": "Dick's", "s": "DKS", "d": "dickssportinggoods.com", "t": "장전", "rec": True, "eps": "$3.35", "rev": "$3.8B", "view": "견조한 실적 예상"}
+        ]},
+        {"date": "03-09 (월)", "comps": [
+            {"n": "Oracle", "s": "ORCL", "d": "oracle.com", "t": "장후", "rec": True, "eps": "$1.38", "rev": "$13.3B", "view": "🔥 클라우드 모멘텀"},
+            {"n": "Asana", "s": "ASAN", "d": "asana.com", "t": "장후", "rec": False, "eps": "-$0.10", "rev": "$168M", "view": "적자 지속"},
+            {"n": "MongoDB", "s": "MDB", "d": "mongodb.com", "t": "장후", "rec": True, "eps": "$0.45", "rev": "$430M", "view": "DB 수요 폭발"},
+            {"n": "GitLab", "s": "GTLB", "d": "gitlab.com", "t": "장후", "rec": True, "eps": "$0.15", "rev": "$158M", "view": "AI 통합 시너지"},
+            {"n": "SentinelOne", "s": "S", "d": "sentinelone.com", "t": "장후", "rec": False, "eps": "-$0.04", "rev": "$169M", "view": "보안 섹터 둔화"}
+        ]}
     ]
-    return eco_events, ultra_beast, summary, recs, options, earnings
+    return eco_events, human_indicator, ultra_beast, summary, recs, options, earnings
 
-def generate_html(data, eco_events, ultra_beast, summary, recs, options, earnings):
+def generate_html(data, eco_events, human_indicator, ultra_beast, summary, recs, options, earnings):
     try:
         now = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M')
         
@@ -116,28 +141,58 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
         eco_html = ""
         for ev in eco_events:
             eco_html += f'''
-            <div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                <p class="text-red-500 text-[10px] font-black mb-1 uppercase tracking-widest">{ev['d']}</p>
+            <div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
+                <div class="flex justify-between items-start mb-1">
+                    <p class="text-red-500 text-[10px] font-black uppercase tracking-widest">{ev['d']}</p>
+                    <span class="text-[8px] font-black bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 px-1.5 py-0.5 rounded">{ev['odds']}</span>
+                </div>
                 <p class="text-zinc-900 dark:text-white text-sm font-black mb-2">{ev['t']}</p>
                 <p class="text-zinc-500 dark:text-zinc-400 text-[10px] font-bold leading-relaxed">{ev['desc']}</p>
             </div>'''
 
-        bonds_html = ""
+        human_html = ""
+        for h in human_indicator:
+            color = "text-red-500" if "LONG" in h['status'] else "text-blue-500"
+            bg = "bg-red-50 dark:bg-red-500/10" if "LONG" in h['status'] else "bg-blue-50 dark:bg-blue-500/10"
+            human_html += f'''
+            <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1e1e1e]">
+                <p class="text-[10px] font-black text-zinc-500 mb-1">{h['site']}</p>
+                <p class="text-sm font-black {color} {bg} inline-block px-2 py-1 rounded mb-2">{h['status']}</p>
+                <p class="text-[10px] text-zinc-600 dark:text-zinc-400 font-bold leading-relaxed">{h['desc']}</p>
+            </div>'''
+
+        # 🚨 V20.2: 10년물 - 3년물 스프레드 계산 로직 추가
+        yield_10y = data.get('^TNX', {}).get('price', 0)
+        yield_3y = data.get('US3Y=X', {}).get('price', 0)
+        spread = yield_10y - yield_3y
+
+        if spread < 0:
+            spread_status = f"🚨 역전 ({spread:.2f}%p) - 장단기 금리 역전 심화! 경기침체(시장 충격) 경고 시그널 점등."
+            spread_color = "text-red-500 bg-red-50 border-red-200 dark:bg-red-500/10 dark:border-red-900"
+        else:
+            spread_status = f"✅ 정상 ({spread:.2f}%p) - 10년물이 3년물보다 높음. 시장 충격 가능성 제한적."
+            spread_color = "text-green-500 bg-green-50 border-green-200 dark:bg-green-500/10 dark:border-green-900"
+
+        bonds_html = f'''
+        <div class="col-span-1 md:col-span-2 p-3 mb-2 rounded-xl border {spread_color} flex items-center gap-2 shadow-sm">
+            <p class="text-[11px] font-black">{spread_status}</p>
+        </div>
+        '''
+
         bond_rules = {
-            "US2Y=X": {"name": "미 국채 2년물", "warn": "🚨 위험수위 5.0% (연준 인하 지연 시그널)"},
-            "^TNX": {"name": "미 국채 10년물", "warn": "🚨 위험수위 4.5% (나스닥 하락 압력 극대화)"}
+            "US3Y=X": {"name": "단기채 (3년물)"},
+            "^TNX": {"name": "장기채 (10년물)"}
         }
         for sym, info in bond_rules.items():
             d = data.get(sym, {'price':0, 'chg':0, 'history':[0]*30})
             color = 'text-red-500' if d['chg'] > 0 else 'text-blue-500'
             bonds_html += f'''
-            <div class="group relative bg-white dark:bg-[#1e1e1e] p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm" onmouseenter="showChart('{sym}')">
-                <div class="flex justify-between items-center mb-2">
-                    <p class="text-xs font-black text-zinc-600 dark:text-zinc-300">{info['name']}</p>
-                    <p class="{color} text-[10px] font-bold bg-zinc-100 dark:bg-black p-1 rounded">{d['chg']:+.2f}%</p>
+            <div class="group relative bg-white dark:bg-[#1e1e1e] p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm" onmouseenter="showChart('{sym}')">
+                <div class="flex justify-between items-center mb-1">
+                    <p class="text-[10px] font-black text-zinc-600 dark:text-zinc-400">{info['name']}</p>
+                    <p class="{color} text-[9px] font-bold bg-zinc-100 dark:bg-black px-1 rounded">{d['chg']:+.2f}%</p>
                 </div>
-                <p class="text-2xl font-black italic text-zinc-900 dark:text-white mb-3">{d['price']:,.3f}%</p>
-                <p class="text-[10px] font-bold text-red-500 bg-red-50 dark:bg-red-500/10 p-2 rounded-lg">{info['warn']}</p>
+                <p class="text-lg font-black italic text-zinc-900 dark:text-white mb-1">{d['price']:,.3f}%</p>
                 <div id="chart-container-{sym}" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden shadow-2xl pointer-events-none group-hover:block"><div id="chart-{sym}" class="w-full h-full"></div></div>
             </div>'''
 
@@ -206,26 +261,26 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
                 fallback_img = f"https://ui-avatars.com/api/?name={c['n']}&background=2d3748&color=fff&size=64&bold=true"
                 earnings_html += f'''
                 <div class="flex items-center justify-between p-3 rounded-xl border {style} mb-3 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
-                    <div class="flex items-center gap-3">
-                        <img src="https://logo.clearbit.com/{c['d']}" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-white p-1 object-contain" onerror="this.onerror=null; this.src='{fallback_img}'">
-                        <div>
-                            <p class="text-xs font-black text-zinc-900 dark:text-white">{c['n']}{badge} <span class="text-[9px] text-zinc-400 font-bold ml-1">{c['s']}</span></p>
-                            <p class="text-[10px] font-bold text-zinc-500 mt-0.5">EPS: <span class="text-blue-500 dark:text-blue-400">{c['eps']}</span> | Rev: <span class="text-zinc-700 dark:text-zinc-300">{c['rev']}</span></p>
+                    <div class="flex items-center gap-3 w-1/2">
+                        <img src="https://logo.clearbit.com/{c['d']}" class="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-white p-1 object-contain" onerror="this.onerror=null; this.src='{fallback_img}'">
+                        <div class="truncate">
+                            <p class="text-[11px] font-black text-zinc-900 dark:text-white truncate">{c['n']}{badge}</p>
+                            <p class="text-[9px] font-bold text-zinc-500 mt-0.5">EPS: <span class="text-blue-500 dark:text-blue-400">{c['eps']}</span> | Rev: <span class="text-zinc-700 dark:text-zinc-300">{c['rev']}</span></p>
                         </div>
                     </div>
-                    <div class="text-right">
+                    <div class="text-right w-1/2">
                         <span class="text-[9px] font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">{c['t']}</span>
-                        <p class="text-[9px] font-black {view_color} mt-1.5 tracking-tighter">{c['view']}</p>
+                        <p class="text-[9px] font-black {view_color} mt-1.5 truncate">{c['view']}</p>
                     </div>
                 </div>'''
 
-        # HTML 템플릿 - 절대 끊기지 않도록 단일 블록 유지
+        # 🚨 테마 전환 버튼 텍스트("라이트 모드"/"다크 모드") 동적 변경 로직 적용
         base_html = """
         <!DOCTYPE html>
         <html lang="ko" class="dark">
         <head>
             <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>연신내 개미펀드 V19.6</title>
+            <title>연신내 개미펀드 V20.2</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
             <style>
@@ -237,7 +292,17 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
             </style>
             <script>
                 tailwind.config = { darkMode: 'class' };
-                function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+                function toggleTheme() { 
+                    const doc = document.documentElement;
+                    const btn = document.getElementById('theme-btn');
+                    if(doc.classList.contains('dark')) {
+                        doc.classList.remove('dark');
+                        btn.innerText = '다크 모드';
+                    } else {
+                        doc.classList.add('dark');
+                        btn.innerText = '라이트 모드';
+                    }
+                }
             </script>
         </head>
         <body class="bg-zinc-50 dark:bg-[#0d0d0d] text-zinc-900 dark:text-zinc-300">
@@ -252,7 +317,7 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
                         </div>
                     </div>
                     <div class="flex items-center gap-4 bg-white dark:bg-[#151515] p-3 rounded-xl border border-zinc-200 dark:border-zinc-900 shadow-sm">
-                        <button onclick="toggleTheme()" class="p-3 bg-zinc-100 dark:bg-[#1e1e1e] border border-zinc-200 dark:border-zinc-800 rounded-full shadow-lg hover:bg-[#D4AF37] hover:text-black transition">🌓</button>
+                        <button id="theme-btn" onclick="toggleTheme()" class="px-4 py-2 text-[10px] font-black text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-[#1e1e1e] border border-zinc-200 dark:border-zinc-800 rounded-full shadow-lg hover:bg-[#D4AF37] hover:text-black transition">라이트 모드</button>
                         <div class="text-right pl-3 border-l border-zinc-100 dark:border-zinc-800">
                             <p class="text-[9px] text-zinc-500 font-black mb-1 tracking-widest uppercase">KST SYNC</p>
                             <p class="text-sm font-black text-zinc-900 dark:text-white italic">__NOW__</p>
@@ -265,14 +330,25 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">__ECO_EVENTS__</div>
 
+                <div class="bg-white dark:bg-[#151515] p-6 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl mb-8 relative">
+                    <div class="absolute -right-5 -top-5 text-[100px] opacity-5 font-black">👥</div>
+                    <h2 class="text-[11px] font-black text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-3 relative z-10">
+                        <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 🧠 인간지표 & 개미 센티먼트 (커뮤니티 통합)
+                    </h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">__HUMAN__</div>
+                    <div class="mt-4 p-4 bg-red-50 dark:bg-red-500/10 rounded-xl border border-red-100 dark:border-red-500/20 relative z-10">
+                        <p class="text-[11px] font-black text-red-500">🔥 위원회 경고: 현재 커뮤니티 전반에 롱(LONG) 환희 포착. 단기 조정(숏스퀴즈 반대 급부)에 극도로 대비하십시오.</p>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">__INDEX__</div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                     <div>
                         <h2 class="text-[10px] font-black text-zinc-500 mb-3 tracking-[0.3em] uppercase flex items-center gap-3">
-                            <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 국채 금리 (Bonds) & 위험 수위
+                            <span class="w-10 h-[1px] bg-zinc-300 dark:bg-zinc-800"></span> 국채 금리 (시장 충격 지표)
                         </h2>
-                        <div class="grid grid-cols-1 gap-4">__BONDS__</div>
+                        <div class="grid grid-cols-2 gap-4">__BONDS__</div>
                     </div>
                     <div>
                         <h2 class="text-[10px] font-black text-zinc-500 mb-3 tracking-[0.3em] uppercase flex items-center gap-3">
@@ -299,10 +375,10 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
                         <div class="grid grid-cols-2 md:grid-cols-5 gap-3">__OPTIONS__</div>
                     </div>
                     
-                    <div class="bg-white dark:bg-[#151515] p-8 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl h-fit relative overflow-hidden">
+                    <div class="bg-white dark:bg-[#151515] p-6 rounded-3xl border border-zinc-200 dark:border-zinc-900 shadow-xl h-fit relative overflow-hidden">
                         <div class="absolute -right-5 -bottom-5 text-[120px] opacity-5 font-black italic">E</div>
-                        <h3 class="text-[11px] font-black text-zinc-500 mb-6 uppercase border-l-4 border-[#D4AF37] pl-4 tracking-widest relative z-10">실적 발표 & 펀더멘털 (7D)</h3>
-                        <div class="space-y-4 relative z-10">__EARNINGS__</div>
+                        <h3 class="text-[11px] font-black text-zinc-500 mb-6 uppercase border-l-4 border-[#D4AF37] pl-4 tracking-widest relative z-10">실적 융단폭격 (7D)</h3>
+                        <div class="space-y-3 relative z-10 overflow-y-auto max-h-[800px] pr-2">__EARNINGS__</div>
                     </div>
                 </div>
             </div>
@@ -331,6 +407,7 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
         history_json = json.dumps({sym: d.get('history', [0]*30) for sym, d in data.items()})
         final_html = base_html.replace("__CURRENCY__", currency_html)
         final_html = final_html.replace("__ECO_EVENTS__", eco_html)
+        final_html = final_html.replace("__HUMAN__", human_html)
         final_html = final_html.replace("__INDEX__", index_cards)
         final_html = final_html.replace("__BONDS__", bonds_html)
         final_html = final_html.replace("__COMMODITIES__", comm_cards)
@@ -344,7 +421,7 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
 
         with open("index.html", "w", encoding="utf-8") as f:
             f.write(final_html)
-        logger.info("V19.6 HTML successfully generated.")
+        logger.info("V20.2 HTML successfully generated.")
 
     except Exception as e:
         logger.error(f"Generation Error: {e}")
@@ -352,5 +429,5 @@ def generate_html(data, eco_events, ultra_beast, summary, recs, options, earning
 
 if __name__ == "__main__":
     d = fetch_extensive_data()
-    eco, ub, s, r, o, e = ai_meeting_results()
-    generate_html(d, eco, ub, s, r, o, e)
+    eco, hum, ub, s, r, o, e = ai_meeting_results()
+    generate_html(d, eco, hum, ub, s, r, o, e)
