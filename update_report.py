@@ -1,5 +1,4 @@
 import yfinance as yf
-import pandas as pd
 import datetime
 import logging
 import requests
@@ -8,7 +7,7 @@ import requests
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("YeonsinnaeAntFund")
 
-# 1. 확장된 글로벌 시장 데이터 수집 & RSI 계산
+# 1. 확장된 글로벌 시장 데이터 수집
 def fetch_market_data():
     tickers = {
         "Global Equity": {
@@ -31,111 +30,101 @@ def fetch_market_data():
     }
     
     market_data = {"Global Equity": {}, "Crypto & Commodities": {}}
-    vix_price = 20.0 
-    wti_price = 70.0
-    ndx_change = 0.0
-
+    vix_price = 20.0 # 기본값
+    
     for category, group in tickers.items():
         for name, symbol in group.items():
             try:
-                # 20일치 데이터를 가져와서 RSI 계산
                 ticker_obj = yf.Ticker(symbol)
-                hist = ticker_obj.history(period="20d")
+                hist = ticker_obj.history(period="5d")
                 
-                if len(hist) >= 15:
+                if len(hist) >= 2:
                     current_price = hist['Close'].iloc[-1]
                     prev_price = hist['Close'].iloc[-2]
                     change_pct = ((current_price - prev_price) / prev_price) * 100
                     
-                    # 간단한 RSI 계산 로직
-                    delta = hist['Close'].diff()
-                    gain = (delta.where(delta > 0, 0)).rolling(window=14).mean().iloc[-1]
-                    loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean().iloc[-1]
-                    rs = gain / loss if loss != 0 else 100
-                    rsi = 100 - (100 / (1 + rs)) if loss != 0 else 100
-                    
-                    # 변수 저장 (시황 분석용)
-                    if symbol == "^VIX": vix_price = current_price
-                    if symbol == "CL=F": wti_price = current_price
-                    if symbol == "^IXIC": ndx_change = change_pct
-
-                    # 위험도(변동성)에 따른 색상 진하기(Intensity) 설정
-                    abs_change = abs(change_pct)
-                    intensity_class = ""
-                    if abs_change >= 2.0: intensity_class = "font-black tracking-tighter" # 위험도 높음 (아주 굵게)
-                    elif abs_change >= 1.0: intensity_class = "font-bold" # 보통
-                    else: intensity_class = "font-normal opacity-80" # 위험도 낮음 (약간 흐리게)
-
+                    if symbol == "^VIX":
+                        vix_price = current_price # VIX 저장 (공포지수 계산용)
+                        
                     market_data[category][name] = {
                         "price": f"{current_price:,.2f}",
                         "change": f"{change_pct:+.2f}%",
-                        "rsi": f"{rsi:.1f}",
-                        "is_up": change_pct > 0,
-                        "intensity": intensity_class
+                        "color": "text-red-500" if change_pct > 0 else "text-blue-500"
                     }
                 else:
-                    market_data[category][name] = {"price": "N/A", "change": "-", "rsi": "-", "is_up": True, "intensity": ""}
+                    market_data[category][name] = {"price": "N/A", "change": "-", "color": "text-stone-500"}
             except Exception as e:
                 logger.error(f"{name} 수집 에러: {e}")
-                market_data[category][name] = {"price": "Error", "change": "-", "rsi": "-", "is_up": True, "intensity": ""}
+                market_data[category][name] = {"price": "Error", "change": "-", "color": "text-stone-500"}
                 
-    return market_data, vix_price, wti_price, ndx_change
+    return market_data, vix_price
 
-# 2. 공포 탐욕 지수
+# 2. 강철의 공포 탐욕 지수 수집기 (CNN + VIX 백업)
 def fetch_fear_and_greed(vix_price):
-    score = int(max(0, min(100, 100 - (vix_price * 2.5)))) # VIX 기반 계산
-    status = "중립"
-    if score <= 25: status = "극단적 공포"
-    elif score <= 45: status = "공포"
-    elif score <= 75: status = "탐욕"
-    elif score > 75: status = "극단적 탐욕"
-    return score, status
+    score = 50
+    try:
+        url = "https://production.dataviz.cnn.io/index/feargreed/graphdata"
+        headers = {"User-Agent": "Mozilla/5.0", "Accept": "application/json"}
+        response = requests.get(url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            score = int(data['fear_and_greed']['score'])
+        else:
+            raise Exception("CNN Blocked")
+    except Exception as e:
+        logger.warning(f"CNN 접속 실패. VIX 백업 엔진 가동! (VIX: {vix_price})")
+        # VIX를 역산하여 공포 탐욕 지수 추정 (VIX 높을수록 공포)
+        estimated_score = 100 - (vix_price * 2.5)
+        score = int(max(0, min(100, estimated_score))) # 0~100 사이 고정
 
-# 3. AI 에이전트 시황 브리핑 생성기
-def generate_agent_briefing(vix, wti, ndx, score):
-    # 유동성 및 시황 분석
-    market_brief = "<strong>[국내]</strong> 외인 수급 부재로 인한 박스권 횡보. <strong>[미국]</strong> M7 위주의 쏠림 현상 지속. <strong>[글로벌]</strong> 신흥국 자금 이탈 모니터링 필요."
-    if ndx < -1.5:
-        market_brief = "<strong>[미국]</strong> 기술주 전반에 차익실현 매물 출회 및 밸류에이션 부담 가중. <strong>[국내]</strong> 나스닥 하락 여파로 반도체 섹터 투심 악화 우려."
-    
-    # 지정학 리스크 분석
-    geo_risk = "현재 두드러지는 글로벌 지정학적 타격은 제한적입니다."
-    if wti > 80 or vix > 20:
-        geo_risk = "⚠️ <strong>[지정학 리스크]</strong> 이란-이스라엘 분쟁 격화 등 중동 긴장감 고조. 원유 공급망 타격 우려로 인플레이션 헷지 자산(금, 달러) 주목."
+    if score <= 25: 
+        status = "극단적 공포"
+        msg = "😱 시장에 피가 낭자합니다! 쫄보 개미들이 짐 싸서 도망가는 중!"
+        action = "[적극 매수 찬스] 공포에 사서 환희에 팔아라!"
+        picks = "🇺🇸 QQQ, SOXX 분할매수 시작<br>🇰🇷 삼성전자, 현대차 등 낙폭과대 우량주 줍줍"
+    elif score <= 45: 
+        status = "공포"
+        msg = "😨 다들 눈치 보며 쫄아있습니다. 호들갑 떨지 말고 준비하세요."
+        action = "[분할 매수 준비] 좋은 주식을 싸게 담을 바구니를 챙기세요."
+        picks = "🇺🇸 빅테크 (AAPL, MSFT) 조정 시 매수<br>🇰🇷 배당주, 금융주 위주로 방어력 강화"
+    elif score <= 55: 
+        status = "중립"
+        msg = "😐 평화로운 눈치 보기 장세. 세력들이 방향성을 탐색하고 있습니다."
+        action = "[관망 및 현금 확보] 애매할 땐 쉬는 것도 투자입니다."
+        picks = "🇺🇸 개별 실적주 단기 트레이딩<br>🇰🇷 K-방산, 조선 등 모멘텀 살아있는 섹터"
+    elif score <= 75: 
+        status = "탐욕"
+        msg = "🤤 '가즈아!' 외치는 중! 파티장 음악 소리가 점점 커집니다."
+        action = "[분할 매도 시작] 파티는 즐기되 출구 근처에서 춤추세요."
+        picks = "🇺🇸 수익 난 종목 30% 익절 후 현금화<br>🇰🇷 테마주 뇌동매매 절대 금지"
+    else: 
+        status = "극단적 탐욕"
+        msg = "🔥 탐욕의 끝판왕! 너도나도 영끌해서 주식시장으로 뛰어들고 있습니다."
+        action = "[전면 경계 태세] 남들이 환희에 찰 때 조용히 빠져나오세요."
+        picks = "🇺🇸 LMT, 금(GLD) 등 헷지 자산 비중 확대<br>🇰🇷 현금 비중 70% 이상 유지"
+        
+    return {"score": score, "status": status, "msg": msg, "action": action, "picks": picks}
 
-    # 위험 경고 (레드 얼럿)
-    alerts = []
-    if vix > 22: alerts.append("🚨 <strong>CME 증거금 인상 가능성:</strong> 변동성 확대로 파생상품 증거금 인상 검토 루머가 있습니다. 레버리지 축소 권장!")
-    if ndx < -2.0: alerts.append("🚨 <strong>기술주 투매 경계:</strong> AI/반도체 섹터 전반에 매도세가 거셉니다. 섣부른 물타기 금지!")
-    if score <= 25: alerts.append("💡 <strong>개미들 투매 중:</strong> 시장에 피가 낭자합니다. 우량주 분할 매수용 현금 탄창을 장전하십시오.")
-    elif score >= 75: alerts.append("💡 <strong>비이성적 과열:</strong> 모두가 환희에 차 있습니다. 수익 난 종목은 분할 익절하여 현금을 확보하십시오.")
-    
-    if not alerts: alerts.append("✅ 현재 시장에 특별한 시스템적 이상 징후는 발견되지 않았습니다. 개별 종목 장세에 집중하세요.")
-    
-    return market_brief, geo_risk, "<br>".join(alerts)
-
-# 4. HTML 렌더링
-def generate_html(market_data, score, status, brief, geo, alerts):
+# 3. HTML 렌더링 (ECharts 나침반 게이지 포함)
+def generate_html(market_data, fg_data):
     now_kst = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M:%S')
     
-    # 카드 생성기
+    # 카드 생성기 함수
     def build_cards(data_dict):
         cards = ""
         for name, info in data_dict.items():
-            if name == "VIX (공포지수)": color_class = "text-up" if info['is_up'] else "text-down"
-            else: color_class = "text-up" if info['is_up'] else "text-down"
+            # 색상 처리 (VIX는 오르면 빨간색, 나머지는 오르면 붉은색)
+            bg_color = "#2C1E12"
+            if name == "VIX (공포지수)":
+                txt_color = "text-red-500" if "+" in info['change'] else "text-blue-500"
+            else:
+                txt_color = info['color']
                 
-            rsi_val = float(info['rsi']) if info['rsi'] != '-' else 50
-            rsi_color = "text-red-500" if rsi_val >= 70 else ("text-blue-500" if rsi_val <= 30 else "text-muted")
-            
             cards += f"""
-            <div class="card p-4 rounded-xl shadow-lg transition-all hover:scale-105 border">
-                <div class="flex justify-between items-start mb-2">
-                    <p class="text-muted text-xs font-bold">{name}</p>
-                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 {rsi_color}">RSI {info['rsi']}</span>
-                </div>
-                <p class="text-xl font-bold text-main mb-1 {info['intensity']}">{info['price']}</p>
-                <p class="text-sm {color_class} {info['intensity']}">{info['change']}</p>
+            <div class="bg-[{bg_color}] border border-[#3C2A21] p-4 rounded-lg shadow-lg hover:border-[#D4AF37] transition">
+                <p class="text-[#A3B18A] text-xs font-bold mb-1">{name}</p>
+                <p class="text-xl font-bold text-[#EAE7B1] mb-1">{info['price']}</p>
+                <p class="text-xs font-bold {txt_color}">{info['change']}</p>
             </div>
             """
         return cards
@@ -143,7 +132,8 @@ def generate_html(market_data, score, status, brief, geo, alerts):
     eq_cards = build_cards(market_data["Global Equity"])
     cm_cards = build_cards(market_data["Crypto & Commodities"])
 
-    html_content = """
+    # HTML 템플릿 (중괄호 충돌을 막기 위해 문자열 분리 방식 사용)
+    html_top = """
     <!DOCTYPE html>
     <html lang="ko">
     <head>
@@ -154,158 +144,119 @@ def generate_html(market_data, score, status, brief, geo, alerts):
         <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap');
-            
-            /* CSS 변수를 이용한 다크/라이트 테마 설정 */
-            :root {
-                --bg-body: #120C07; /* 깊은 블랙/브라운 */
-                --bg-card: #1A120B;
-                --bg-panel: #241910;
-                --text-main: #EAE7B1; /* 골드 샌드 */
-                --text-muted: #A3B18A; /* 올리브 */
-                --border-color: #3C2A21;
-                --accent: #D4AF37;
-                --up-color: #EF4444; /* 빨강 */
-                --down-color: #3B82F6; /* 파랑 */
-            }
-            [data-theme="light"] {
-                --bg-body: #F3F4F6; /* 실버 화이트 */
-                --bg-card: #FFFFFF;
-                --bg-panel: #E5E7EB;
-                --text-main: #1F2937; /* 진한 회색 */
-                --text-muted: #6B7280;
-                --border-color: #D1D5DB;
-                --accent: #B45309;
-                --up-color: #DC2626; 
-                --down-color: #2563EB; 
-            }
-            
-            body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Noto Sans KR', sans-serif; transition: all 0.3s; }
-            .card { background-color: var(--bg-card); border-color: var(--border-color); }
-            .panel { background-color: var(--bg-panel); border-color: var(--border-color); }
-            .text-main { color: var(--text-main); }
-            .text-muted { color: var(--text-muted); }
-            .text-accent { color: var(--accent); }
-            .text-up { color: var(--up-color); }
-            .text-down { color: var(--down-color); }
-            .border { border-color: var(--border-color); }
+            body { background-color: #120C07; color: #EAE7B1; font-family: 'Noto Sans KR', sans-serif; }
         </style>
     </head>
     <body class="p-4 md:p-8">
-        <div class="max-w-7xl mx-auto">
+        <div class="max-w-6xl mx-auto">
             
-            <header class="mb-8 border-b pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border">
+            <header class="mb-8 border-b border-[#3C2A21] pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
-                    <h1 class="text-4xl font-black text-accent tracking-tight">🐜 연신내 개미 펀드</h1>
-                    <p class="text-muted text-sm mt-2 font-bold tracking-widest">GLOBAL MACRO DASHBOARD</p>
+                    <h1 class="text-4xl font-black text-[#D4AF37] tracking-tight">🐜 연신내 개미 펀드</h1>
+                    <p class="text-[#A3B18A] text-sm mt-2 font-bold tracking-widest">YEONSINNAE ANT FUND • V2.0</p>
                 </div>
-                <div class="flex items-center gap-4">
-                    <button onclick="toggleTheme()" class="card px-4 py-2 rounded-full font-bold shadow-md border text-sm flex items-center gap-2">
-                        <span id="theme-icon">🌙 블랙 모드</span>
-                    </button>
-                    <div class="text-right card p-2 rounded border">
-                        <p class="text-xs text-muted">업데이트 (KST)</p>
-                        <p class="font-bold text-md text-main">""" + now_kst + """</p>
-                    </div>
+                <div class="text-left md:text-right bg-[#1A120B] p-2 rounded border border-[#3C2A21]">
+                    <p class="text-xs text-stone-500">최종 업데이트 (KST)</p>
+                    <p class="font-bold text-md text-white">""" + now_kst + """</p>
                 </div>
             </header>
 
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
-                <div class="card rounded-2xl p-4 flex flex-col items-center justify-center shadow-xl border">
-                    <h2 class="text-muted font-bold mb-2">시장 심리 나침반</h2>
-                    <div id="gauge-chart" style="width: 100%; height: 220px;"></div>
-                    <p class="text-2xl font-black text-main mt-[-20px]">""" + status + """</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-[#1A120B] border border-[#3C2A21] rounded-xl p-4 flex flex-col items-center justify-center shadow-2xl">
+                    <h2 class="text-[#A3B18A] font-bold mb-2">시장 심리 나침반</h2>
+                    <div id="gauge-chart" style="width: 100%; height: 250px;"></div>
+                    <p class="text-2xl font-black text-white mt-[-20px]">""" + fg_data['status'] + """</p>
                 </div>
 
-                <div class="panel rounded-2xl p-6 lg:col-span-2 shadow-xl border">
-                    <h2 class="text-xl text-accent font-black mb-4 flex items-center">📊 AI 퀀트 시황 요약</h2>
-                    <div class="space-y-4 text-sm leading-relaxed">
-                        <div class="border-l-4 border-accent pl-3">
-                            <h3 class="font-bold text-muted mb-1">글로벌 자금 흐름 (Liquidity)</h3>
-                            <p class="text-main">""" + brief + """</p>
+                <div class="bg-[#2C1E12] border border-[#3C2A21] rounded-xl p-6 md:col-span-2 shadow-2xl">
+                    <h2 class="text-xl text-[#D4AF37] font-black mb-4 flex items-center">
+                        <span class="mr-2 text-2xl">🤖</span> AI 에이전트 긴급 회의록
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="bg-[#1A120B] p-4 rounded-lg border-l-4 border-red-500">
+                            <p class="text-xs text-stone-400 mb-1">심리 행동대장 (Psyche)</p>
+                            <p class="text-md font-bold text-white">""" + fg_data['msg'] + """</p>
                         </div>
-                        <div class="border-l-4 border-red-500 pl-3">
-                            <h3 class="font-bold text-muted mb-1">지정학적 리스크 (Macro)</h3>
-                            <p class="text-main">""" + geo + """</p>
+                        <div class="bg-[#1A120B] p-4 rounded-lg border-l-4 border-[#D4AF37]">
+                            <p class="text-xs text-stone-400 mb-1">매매 전략가 (Opus)</p>
+                            <p class="text-md font-bold text-[#EAE7B1]">""" + fg_data['action'] + """</p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="card rounded-2xl p-6 shadow-xl border border-red-900/50">
-                    <h2 class="text-xl text-red-500 font-black mb-4 flex items-center">🚨 포트폴리오 경고등</h2>
-                    <div class="text-sm text-main space-y-3 leading-relaxed">
-                        """ + alerts + """
+                        <div class="bg-[#1A120B] p-4 rounded-lg border-l-4 border-green-500">
+                            <p class="text-xs text-stone-400 mb-1">섹터 분석가 (Alpha)</p>
+                            <p class="text-sm text-stone-300 leading-relaxed">""" + fg_data['picks'] + """</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <h2 class="text-lg font-bold text-muted mb-4 border-b pb-2 border">🌐 글로벌 핵심 지수 (RSI 탑재)</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">
+            <h2 class="text-lg font-bold text-[#A3B18A] mb-4 border-b border-[#3C2A21] pb-2">🌐 글로벌 지수 현황</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-8">
                 """ + eq_cards + """
             </div>
 
-            <h2 class="text-lg font-bold text-muted mb-4 border-b pb-2 border">🪙 대체 자산 (크립토 & 원자재)</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
+            <h2 class="text-lg font-bold text-[#A3B18A] mb-4 border-b border-[#3C2A21] pb-2">🪙 암호화폐 & 원자재</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-10">
                 """ + cm_cards + """
             </div>
             
+            <footer class="text-center text-stone-600 text-xs py-4 border-t border-[#3C2A21]">
+                <p>Designed for Yeonsinnae Ant Fund. Powered by AI Agents.</p>
+            </footer>
         </div>
 
         <script>
-            // 테마 전환 로직
-            function toggleTheme() {
-                const body = document.body;
-                const icon = document.getElementById('theme-icon');
-                if (body.getAttribute('data-theme') === 'light') {
-                    body.removeAttribute('data-theme');
-                    localStorage.setItem('theme', 'dark');
-                    icon.innerText = '🌙 블랙 모드';
-                } else {
-                    body.setAttribute('data-theme', 'light');
-                    localStorage.setItem('theme', 'light');
-                    icon.innerText = '☀️ 실버 모드';
-                }
-            }
-            // 페이지 로드 시 테마 유지
-            if(localStorage.getItem('theme') === 'light') {
-                document.body.setAttribute('data-theme', 'light');
-                document.getElementById('theme-icon').innerText = '☀️ 실버 모드';
-            }
-
-            // 게이지 차트
             var chartDom = document.getElementById('gauge-chart');
             var myChart = echarts.init(chartDom);
             var option = {
                 series: [{
-                    type: 'gauge', startAngle: 180, endAngle: 0, min: 0, max: 100, splitNumber: 4,
+                    type: 'gauge',
+                    startAngle: 180,
+                    endAngle: 0,
+                    min: 0,
+                    max: 100,
+                    splitNumber: 4,
                     itemStyle: {
                         color: function(params) {
-                            var val = """ + str(score) + """;
-                            if(val <= 25) return '#EF4444'; if(val <= 45) return '#F97316';
-                            if(val <= 55) return '#78716C'; if(val <= 75) return '#4ADE80';
-                            return '#16A34A';
+                            var val = """ + str(fg_data['score']) + """;
+                            if(val <= 25) return '#EF4444'; // Red
+                            if(val <= 45) return '#F97316'; // Orange
+                            if(val <= 55) return '#78716C'; // Stone
+                            if(val <= 75) return '#4ADE80'; // Green
+                            return '#16A34A'; // Dark Green
                         }()
                     },
-                    progress: { show: true, width: 20 }, pointer: { show: false },
-                    axisLine: { lineStyle: { width: 20, color: [[1, 'rgba(128,128,128,0.2)']] } },
-                    axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false },
-                    detail: { valueAnimation: true, formatter: '{value}', color: 'inherit', fontSize: 40, fontWeight: '900', offsetCenter: [0, '-10%'] },
-                    data: [{ value: """ + str(score) + """ }]
+                    progress: { show: true, width: 20 },
+                    pointer: { show: false },
+                    axisLine: { lineStyle: { width: 20, color: [[1, '#2C1E12']] } },
+                    axisTick: { show: false },
+                    splitLine: { show: false },
+                    axisLabel: { show: false },
+                    detail: {
+                        valueAnimation: true,
+                        formatter: '{value}',
+                        color: '#EAE7B1',
+                        fontSize: 45,
+                        fontWeight: '900',
+                        offsetCenter: [0, '-10%']
+                    },
+                    data: [{ value: """ + str(fg_data['score']) + """ }]
                 }]
             };
             myChart.setOption(option);
-            window.addEventListener('resize', function() { myChart.resize(); });
+            window.addEventListener('resize', function() {
+                myChart.resize();
+            });
         </script>
     </body>
     </html>
     """
     
     with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html_content)
+        f.write(html_top)
 
 if __name__ == "__main__":
-    logger.info("V3 엔진 가동...")
-    m_data, vix, wti, ndx = fetch_market_data()
-    score, status = fetch_fear_and_greed(vix)
-    brief, geo, alerts = generate_agent_briefing(vix, wti, ndx, score)
-    generate_html(m_data, score, status, brief, geo, alerts)
-    logger.info("업데이트 완료.")
+    logger.info("연신내 개미 펀드 V2 수집 시작...")
+    m_data, vix = fetch_market_data()
+    fg_data = fetch_fear_and_greed(vix)
+    generate_html(m_data, fg_data)
+    logger.info("리포트 업데이트 완료.")
