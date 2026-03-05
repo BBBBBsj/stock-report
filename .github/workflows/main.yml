@@ -2,7 +2,6 @@ name: Daily Stock Report Update
 
 on:
   schedule:
-    # 매일 UTC 기준 23시, 7시, 14시 (한국시간 아침 8시, 오후 4시, 밤 11시)에 실행
     - cron: '0 23,7,14 * * *'
   workflow_dispatch:
 
@@ -11,19 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
-- name: Install dependencies
+      - name: Install dependencies
         run: |
           pip install pandas requests beautifulsoup4 yfinance
 
       - name: Run analysis script
-        run: python update_report.py # 데이터를 긁어와서 index.html을 만드는 파이썬 파일
+        run: python update_report.py
 
       - name: Commit and Push
         env:
@@ -32,5 +31,5 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add index.html
-          git commit -m "Auto-update report: $(date)"
+          git commit -m "Auto-update" || echo "No changes to commit"
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git main
