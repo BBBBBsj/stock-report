@@ -17,9 +17,9 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install dependencies
+- name: Install dependencies
         run: |
-          pip install pandas requests beautifulsoup4
+          pip install pandas requests beautifulsoup4 yfinance
 
       - name: Run analysis script
         run: python update_report.py # 데이터를 긁어와서 index.html을 만드는 파이썬 파일
