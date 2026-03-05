@@ -2,187 +2,261 @@
     <!DOCTYPE html>
     <html lang="ko">
     <head>
-        <meta charset="UTF-8">
-        <title>연신내 개미펀드 V10.1</title>
+        <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>연신내 개미펀드 V11</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:wght@400;900&display=swap');
-            body { background-color: #1e1e1e; color: #c4c4c4; font-family: 'Inter', sans-serif; }
-            h1, h2, h3 { font-family: 'Black Han Sans', sans-serif; }
+            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;900&display=swap');
+            body { background-color: #121212; color: #e0e0e0; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; -webkit-font-smoothing: antialiased; }
+            .text-accent { color: #D4AF37; }
             @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-            .ant-logo { width: 90px; height: 90px; object-fit: contain; animation: spin 12s linear infinite; filter: drop-shadow(0 0 15px rgba(255,255,255,0.3)); }
+            .ant-logo { width: 100px; height: 100px; object-fit: contain; animation: spin 15s linear infinite; filter: drop-shadow(0 0 15px rgba(212,175,55,0.4)); }
+            .card-gradient { background: linear-gradient(145deg, #2d2d2d, #1e1e1e); }
         </style>
     </head>
-    <body class="p-4 md:p-10">
+    <body class="p-6 md:p-12">
         <div class="max-w-7xl mx-auto">
-            <header class="flex flex-col md:flex-row justify-between items-center mb-12 border-b border-zinc-800 pb-8 gap-6">
-                <div class="flex items-center gap-6">
-                    <img src="https://i.ibb.co/v6XkYvR/ax-removebg.png" class="ant-logo" alt="로고">
+            <header class="flex flex-col md:flex-row justify-between items-center mb-16 border-b border-zinc-800 pb-10 gap-8">
+                <div class="flex items-center gap-8">
+                    <img src="https://i.ibb.co/v6XkYvR/ax-removebg.png" class="ant-logo" alt="Beast Ant">
                     <div>
-                        <h1 class="text-5xl font-black text-white italic tracking-tighter">연신내 개미펀드</h1>
-                        <p class="text-red-500 font-black text-xs mt-1 tracking-[0.5em] uppercase">15인 AI 위원회 가동 중 (차트 엔진 탑재)</p>
+                        <h1 class="text-6xl font-black text-white italic tracking-tighter mb-2">연신내 개미펀드</h1>
+                        <p class="text-accent font-black text-sm tracking-[0.4em] uppercase">15 AGENTS ULTIMATE QUANT TERMINAL V11</p>
                     </div>
                 </div>
-                <div class="bg-[#2d2d2d] px-6 py-2 rounded-xl border border-zinc-700 shadow-2xl">
-                    <p class="text-[10px] text-zinc-500 font-black">동기화: 2026-03-05 15:23</p>
+                <div class="bg-[#1e1e1e] p-4 rounded-2xl border border-zinc-800 shadow-2xl text-right">
+                    <p class="text-[10px] text-zinc-500 font-black mb-1">REAL-TIME KST SYNC</p>
+                    <p class="text-lg font-black text-white italic">2026-03-05 15:31</p>
                 </div>
             </header>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-10">
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('^KS11')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">코스피</p>
-            <p class="text-md font-black text-[#c4c4c4]">5,619.6</p>
-            <p class="text-[11px] font-bold text-red-500">+10.33%</p>
-            <div id="chart-container-^KS11" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-12">
+        <div class="group relative bg-[#2d2d2d] p-4 rounded-xl border border-zinc-800 shadow-inner cursor-pointer" onmouseenter="showChart('^KS11')">
+            <p class="text-[11px] text-zinc-500 font-bold mb-1">코스피</p>
+            <p class="text-lg font-black text-white">5,591.54</p>
+            <p class="text-red-500 text-xs font-bold">+9.78%</p>
+            <div id="chart-container-^KS11" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
                 <div id="chart-^KS11" class="w-full h-full"></div>
             </div>
         </div>
         
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('^IXIC')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">나스닥</p>
-            <p class="text-md font-black text-[#c4c4c4]">22,807.5</p>
-            <p class="text-[11px] font-bold text-red-500">+1.29%</p>
-            <div id="chart-container-^IXIC" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
+        <div class="group relative bg-[#2d2d2d] p-4 rounded-xl border border-zinc-800 shadow-inner cursor-pointer" onmouseenter="showChart('^IXIC')">
+            <p class="text-[11px] text-zinc-500 font-bold mb-1">나스닥</p>
+            <p class="text-lg font-black text-white">22,807.48</p>
+            <p class="text-red-500 text-xs font-bold">+1.29%</p>
+            <div id="chart-container-^IXIC" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
                 <div id="chart-^IXIC" class="w-full h-full"></div>
             </div>
         </div>
         
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('^GSPC')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">S&P500</p>
-            <p class="text-md font-black text-[#c4c4c4]">6,869.5</p>
-            <p class="text-[11px] font-bold text-red-500">+0.78%</p>
-            <div id="chart-container-^GSPC" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
+        <div class="group relative bg-[#2d2d2d] p-4 rounded-xl border border-zinc-800 shadow-inner cursor-pointer" onmouseenter="showChart('^GSPC')">
+            <p class="text-[11px] text-zinc-500 font-bold mb-1">S&P500</p>
+            <p class="text-lg font-black text-white">6,869.50</p>
+            <p class="text-red-500 text-xs font-bold">+0.78%</p>
+            <div id="chart-container-^GSPC" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
                 <div id="chart-^GSPC" class="w-full h-full"></div>
             </div>
         </div>
         
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('^VIX')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">공포지수</p>
-            <p class="text-md font-black text-[#c4c4c4]">21.1</p>
-            <p class="text-[11px] font-bold text-blue-500">-10.27%</p>
-            <div id="chart-container-^VIX" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
+        <div class="group relative bg-[#2d2d2d] p-4 rounded-xl border border-zinc-800 shadow-inner cursor-pointer" onmouseenter="showChart('^VIX')">
+            <p class="text-[11px] text-zinc-500 font-bold mb-1">공포지수</p>
+            <p class="text-lg font-black text-white">21.15</p>
+            <p class="text-blue-500 text-xs font-bold">-10.27%</p>
+            <div id="chart-container-^VIX" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
                 <div id="chart-^VIX" class="w-full h-full"></div>
             </div>
         </div>
         
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('BTC-USD')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">비트코인</p>
-            <p class="text-md font-black text-[#c4c4c4]">72,322.6</p>
-            <p class="text-[11px] font-bold text-red-500">+5.90%</p>
-            <div id="chart-container-BTC-USD" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
+        <div class="group relative bg-[#2d2d2d] p-4 rounded-xl border border-zinc-800 shadow-inner cursor-pointer" onmouseenter="showChart('BTC-USD')">
+            <p class="text-[11px] text-zinc-500 font-bold mb-1">비트코인</p>
+            <p class="text-lg font-black text-white">72,373.27</p>
+            <p class="text-blue-500 text-xs font-bold">-0.46%</p>
+            <div id="chart-container-BTC-USD" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
                 <div id="chart-BTC-USD" class="w-full h-full"></div>
             </div>
         </div>
         
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('GC=F')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">금</p>
-            <p class="text-md font-black text-[#c4c4c4]">5,141.1</p>
-            <p class="text-[11px] font-bold text-red-500">+0.41%</p>
-            <div id="chart-container-GC=F" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
+        <div class="group relative bg-[#2d2d2d] p-4 rounded-xl border border-zinc-800 shadow-inner cursor-pointer" onmouseenter="showChart('GC=F')">
+            <p class="text-[11px] text-zinc-500 font-bold mb-1">금</p>
+            <p class="text-lg font-black text-white">5,145.00</p>
+            <p class="text-red-500 text-xs font-bold">+0.48%</p>
+            <div id="chart-container-GC=F" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
                 <div id="chart-GC=F" class="w-full h-full"></div>
             </div>
         </div>
         
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('CL=F')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">원유</p>
-            <p class="text-md font-black text-[#c4c4c4]">77.5</p>
-            <p class="text-[11px] font-bold text-red-500">+3.78%</p>
-            <div id="chart-container-CL=F" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
+        <div class="group relative bg-[#2d2d2d] p-4 rounded-xl border border-zinc-800 shadow-inner cursor-pointer" onmouseenter="showChart('CL=F')">
+            <p class="text-[11px] text-zinc-500 font-bold mb-1">원유</p>
+            <p class="text-lg font-black text-white">77.65</p>
+            <p class="text-red-500 text-xs font-bold">+4.00%</p>
+            <div id="chart-container-CL=F" class="absolute z-50 bottom-full left-0 mb-2 w-56 h-32 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
                 <div id="chart-CL=F" class="w-full h-full"></div>
-            </div>
-        </div>
-        
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('SOXX')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">반도체</p>
-            <p class="text-md font-black text-[#c4c4c4]">341.5</p>
-            <p class="text-[11px] font-bold text-red-500">+2.02%</p>
-            <div id="chart-container-SOXX" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
-                <div id="chart-SOXX" class="w-full h-full"></div>
-            </div>
-        </div>
-        
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('XBI')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">바이오</p>
-            <p class="text-md font-black text-[#c4c4c4]">126.4</p>
-            <p class="text-[11px] font-bold text-red-500">+2.36%</p>
-            <div id="chart-container-XBI" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
-                <div id="chart-XBI" class="w-full h-full"></div>
-            </div>
-        </div>
-        
-        <div class="group relative bg-[#2d2d2d] p-3 rounded-lg border border-zinc-800 shadow-inner cursor-pointer" 
-             onmouseenter="showMiniChart('XLF')">
-            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">금융</p>
-            <p class="text-md font-black text-[#c4c4c4]">51.5</p>
-            <p class="text-[11px] font-bold text-red-500">+0.57%</p>
-            <div id="chart-container-XLF" class="absolute z-50 bottom-full left-0 mb-2 w-48 h-24 bg-black border border-zinc-700 rounded-lg p-1 hidden group-hover:block pointer-events-none shadow-2xl">
-                <div id="chart-XLF" class="w-full h-full"></div>
             </div>
         </div>
         </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-                <div class="lg:col-span-2 bg-[#2d2d2d] p-8 rounded-3xl border border-zinc-800 shadow-2xl">
-                    <h2 class="text-3xl font-black text-white mb-6 italic">🏛️ 15인 위원회 전략 회의록</h2>
-                    <div class="space-y-6">
-                        <div class="bg-red-500/10 p-6 rounded-2xl border border-red-500/20"><p class="text-lg text-white font-black"><strong>🔥 긴급: 국장 대폭발!</strong> 코스피 10.3% 상승은 역대급 불장입니다. 숏커버링과 외인 광기수급이 겹쳤습니다.</p></div>
-                        <div class="bg-zinc-800/50 p-6 rounded-2xl border border-zinc-700"><p class="text-sm text-zinc-300 font-bold">⚠️ <strong>트레이딩 코치:</strong> 지금 안 사면 바보라는 생각(FOMO)이 들 때가 가장 위험하지만, 오늘 같은 장은 안 타면 소외됩니다.</p></div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                <div class="lg:col-span-2 card-gradient p-10 rounded-3xl border border-zinc-800 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-20 -bottom-20 opacity-5 text-[200px] font-black italic">BEAST</div>
+                    <h2 class="text-3xl font-black text-white mb-8 italic flex items-center gap-3">🏛️ 15인 위원회 실시간 전략 보고</h2>
+                    <div class="bg-black/30 p-8 rounded-2xl border border-zinc-700/50 mb-8">
+                        <p class="text-sm text-zinc-300 leading-relaxed font-bold italic underline decoration-accent decoration-2 underline-offset-8">
+                            금일 나스닥은 트럼프의 추가 관세 관련 발언과 연준 위원들의 매파적 태도로 인해 변동성이 극대화되었습니다. 
+                            세력들은 현재 반도체 하단 지지선을 테스트 중이며, 옵션 만기일을 앞두고 맥스페인 가격으로의 회귀 본능이 강해질 것으로 보입니다.
+                        </p>
                     </div>
                 </div>
-                <div class="bg-[#2d2d2d] p-8 rounded-3xl border border-zinc-800 shadow-2xl">
-                    <h3 class="text-xs font-black text-zinc-500 mb-8 uppercase border-l-4 border-red-600 pl-4">실시간 위험 감지 판넬</h3>
-                    <div class="space-y-8">
-                        <div class="space-y-2"><div class="flex justify-between text-xs font-black"><span>탐욕 지수</span><span class="text-white">88%</span></div><div class="w-full bg-zinc-800 h-2 rounded-full"><div class="bg-red-500 h-2 rounded-full" style="width: 88%"></div></div></div>
-                        <div class="space-y-2"><div class="flex justify-between text-xs font-black"><span>매집 강도</span><span class="text-white">95%</span></div><div class="w-full bg-zinc-800 h-2 rounded-full"><div class="bg-white h-2 rounded-full" style="width: 95%"></div></div></div>
-                    </div>
+                <div class="bg-[#1e1e1e] p-8 rounded-3xl border border-zinc-800 shadow-2xl">
+                    <h3 class="text-xs font-black text-zinc-500 mb-6 uppercase border-l-4 border-accent pl-4 tracking-widest">나스닥 경제 지표 캘린더</h3>
+                    <div class="bg-black/20 rounded-xl border border-zinc-800">
+        <div class="flex gap-4 items-center p-3 border-b border-zinc-800 last:border-0">
+            <span class="bg-zinc-800 text-zinc-400 text-[10px] px-2 py-1 rounded font-black w-12 text-center">어제</span>
+            <span class="text-zinc-200 text-sm font-bold">미 연준 베이지북 발표 - 경기 둔화 우려 완화로 나스닥 반등</span>
+        </div>
+    
+        <div class="flex gap-4 items-center p-3 border-b border-zinc-800 last:border-0">
+            <span class="bg-zinc-800 text-zinc-400 text-[10px] px-2 py-1 rounded font-black w-12 text-center">오늘</span>
+            <span class="text-zinc-200 text-sm font-bold">신규 실업수당 청구 건수 / 트럼프 경제 특보 연설 예정</span>
+        </div>
+    
+        <div class="flex gap-4 items-center p-3 border-b border-zinc-800 last:border-0">
+            <span class="bg-zinc-800 text-zinc-400 text-[10px] px-2 py-1 rounded font-black w-12 text-center">내일</span>
+            <span class="text-zinc-200 text-sm font-bold">비농업 고용지수 발표 (나스닥 향방 결정적 키) / 브로드컴 실적 발표</span>
+        </div>
+    </div>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-white/20 transition-all shadow-xl">
-            <h3 class="text-white font-black text-lg mb-3">🔥 니가 진짜 야수라면? (상남자 특: 풀매수)</h3>
-            <div class="bg-black/40 p-3 rounded-lg mb-3 border border-white/5 font-black text-white text-sm tracking-widest">NVDA, SOXL, MSTR</div>
-            <p class="text-zinc-400 text-xs leading-relaxed font-bold">퀀트팀: MACD 하늘 돌파. 데이터팀: '돈복사' 검색량 폭증. 쫄보 금지.</p>
+
+            <h2 class="text-sm font-black text-zinc-500 mb-8 tracking-widest uppercase flex items-center gap-3">
+                <span class="w-12 h-[1px] bg-zinc-800"></span> 경주마 ㄱㄱ (초고위험 타겟)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-20">
+        <div class="group relative bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-red-500/50 transition-all cursor-pointer" onmouseenter="showChart('SOXL')">
+            <div class="flex justify-between items-start mb-3">
+                <p class="bg-red-500/10 text-red-500 text-[10px] px-2 py-0.5 rounded font-black">경주마 ㄱㄱ</p>
+                <p class="text-zinc-500 text-[10px] font-bold">전날: +5.2%</p>
+            </div>
+            <p class="text-white font-black text-2xl mb-1">SOXL</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-bold">반도체 레버리지 광기 구간. MACD 돌파 확인. 상남자 전용.</p>
+            <div id="chart-container-SOXL" class="absolute z-50 bottom-full left-0 mb-2 w-64 h-40 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
+                <div id="chart-SOXL" class="w-full h-full"></div>
+            </div>
         </div>
         
-        <div class="bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-white/20 transition-all shadow-xl">
-            <h3 class="text-white font-black text-lg mb-3">🏃‍♂️ 평범이의 숟가락 얹기 (남들 벌 때 벌기)</h3>
-            <div class="bg-black/40 p-3 rounded-lg mb-3 border border-white/5 font-black text-white text-sm tracking-widest">QQQ, VOO, KODEX 200</div>
-            <p class="text-zinc-400 text-xs leading-relaxed font-bold">거시경제팀: 대세 상승장 국룰. 지수가 밀어 올리는 무지성 수익 구간.</p>
+        <div class="group relative bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-red-500/50 transition-all cursor-pointer" onmouseenter="showChart('MSTR')">
+            <div class="flex justify-between items-start mb-3">
+                <p class="bg-red-500/10 text-red-500 text-[10px] px-2 py-0.5 rounded font-black">경주마 ㄱㄱ</p>
+                <p class="text-zinc-500 text-[10px] font-bold">전날: +8.4%</p>
+            </div>
+            <p class="text-white font-black text-2xl mb-1">MSTR</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-bold">비트코인 현물 보유 세력주. 코인 유동성 직결. 야수의 심장 필수.</p>
+            <div id="chart-container-MSTR" class="absolute z-50 bottom-full left-0 mb-2 w-64 h-40 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
+                <div id="chart-MSTR" class="w-full h-full"></div>
+            </div>
         </div>
         
-        <div class="bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-white/20 transition-all shadow-xl">
-            <h3 class="text-white font-black text-lg mb-3">🛡️ 쫄보들을 위한 안식처 (예금보단 낫지)</h3>
-            <div class="bg-black/40 p-3 rounded-lg mb-3 border border-white/5 font-black text-white text-sm tracking-widest">TLT, IAU, XLF(금융)</div>
-            <p class="text-zinc-400 text-xs leading-relaxed font-bold">리스크팀: 겁쟁이용 추천. 금리 하락세와 은행 배당주로 대피하여 따뜻하게 보존.</p>
+        <div class="group relative bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-red-500/50 transition-all cursor-pointer" onmouseenter="showChart('TQQQ')">
+            <div class="flex justify-between items-start mb-3">
+                <p class="bg-red-500/10 text-red-500 text-[10px] px-2 py-0.5 rounded font-black">경주마 ㄱㄱ</p>
+                <p class="text-zinc-500 text-[10px] font-bold">전날: +3.1%</p>
+            </div>
+            <p class="text-white font-black text-2xl mb-1">TQQQ</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-bold">나스닥 3배. 지수 상승 시 돈복사기 가동. 세력 매집 포착.</p>
+            <div id="chart-container-TQQQ" class="absolute z-50 bottom-full left-0 mb-2 w-64 h-40 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
+                <div id="chart-TQQQ" class="w-full h-full"></div>
+            </div>
         </div>
         
-        <div class="bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-white/20 transition-all shadow-xl">
-            <h3 class="text-white font-black text-lg mb-3">🕵️ 세력 형님들 뒤꽁무니 쫓기 (숏커버링 맛집)</h3>
-            <div class="bg-black/40 p-3 rounded-lg mb-3 border border-white/5 font-black text-white text-sm tracking-widest">TSLA, XBI(바이오)</div>
-            <p class="text-zinc-400 text-xs leading-relaxed font-bold">수급추적자: 바이오 바닥 매집 포착. 테슬라 숏 형들의 눈물의 환매수 시작.</p>
+        <div class="group relative bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-red-500/50 transition-all cursor-pointer" onmouseenter="showChart('NVDL')">
+            <div class="flex justify-between items-start mb-3">
+                <p class="bg-red-500/10 text-red-500 text-[10px] px-2 py-0.5 rounded font-black">경주마 ㄱㄱ</p>
+                <p class="text-zinc-500 text-[10px] font-bold">전날: +6.7%</p>
+            </div>
+            <p class="text-white font-black text-2xl mb-1">NVDL</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-bold">엔비디아 2배. AI 대장주의 끝없는 랠리 추종. 숏커버링 예상.</p>
+            <div id="chart-container-NVDL" class="absolute z-50 bottom-full left-0 mb-2 w-64 h-40 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
+                <div id="chart-NVDL" class="w-full h-full"></div>
+            </div>
+        </div>
+        
+        <div class="group relative bg-[#2d2d2d] p-5 rounded-2xl border border-zinc-800 hover:border-red-500/50 transition-all cursor-pointer" onmouseenter="showChart('CONL')">
+            <div class="flex justify-between items-start mb-3">
+                <p class="bg-red-500/10 text-red-500 text-[10px] px-2 py-0.5 rounded font-black">경주마 ㄱㄱ</p>
+                <p class="text-zinc-500 text-[10px] font-bold">전날: +12.1%</p>
+            </div>
+            <p class="text-white font-black text-2xl mb-1">CONL</p>
+            <p class="text-zinc-400 text-xs leading-relaxed font-bold">코인베이스 2배. 가상자산 폭등장 주도주. 하이리스크 하이리턴.</p>
+            <div id="chart-container-CONL" class="absolute z-50 bottom-full left-0 mb-2 w-64 h-40 bg-black border border-zinc-700 rounded-xl p-2 hidden group-hover:block pointer-events-none shadow-2xl">
+                <div id="chart-CONL" class="w-full h-full"></div>
+            </div>
         </div>
         </div>
+
+            <h2 class="text-sm font-black text-zinc-500 mb-8 tracking-widest uppercase flex items-center gap-3">
+                <span class="w-12 h-[1px] bg-zinc-800"></span> 옵션 세력 포착 & 맥스페인 분석
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-16">
+        <div class="bg-[#1a1a1a] p-4 rounded-xl border border-zinc-800">
+            <div class="flex justify-between mb-2">
+                <span class="text-white font-black">NVDA</span>
+                <span class="text-accent text-xs font-bold">MAX PAIN: 135.0</span>
+            </div>
+            <p class="text-zinc-500 text-xs font-bold">세력 140불 콜옵션 대량 매집. 132불 하단 지지 후 수익 실현 타점.</p>
         </div>
+    
+        <div class="bg-[#1a1a1a] p-4 rounded-xl border border-zinc-800">
+            <div class="flex justify-between mb-2">
+                <span class="text-white font-black">TSLA</span>
+                <span class="text-accent text-xs font-bold">MAX PAIN: 210.0</span>
+            </div>
+            <p class="text-zinc-500 text-xs font-bold">맥스페인 가격 205불. 변동성 확대 구간. 215불 돌파 시 숏스퀴즈.</p>
+        </div>
+    
+        <div class="bg-[#1a1a1a] p-4 rounded-xl border border-zinc-800">
+            <div class="flex justify-between mb-2">
+                <span class="text-white font-black">AAPL</span>
+                <span class="text-accent text-xs font-bold">MAX PAIN: 225.0</span>
+            </div>
+            <p class="text-zinc-500 text-xs font-bold">횡보 흐름. 기관들 풋옵션 매도로 하방 경직성 확보. 230불 목표.</p>
+        </div>
+    
+        <div class="bg-[#1a1a1a] p-4 rounded-xl border border-zinc-800">
+            <div class="flex justify-between mb-2">
+                <span class="text-white font-black">QQQ</span>
+                <span class="text-accent text-xs font-bold">MAX PAIN: 480.0</span>
+            </div>
+            <p class="text-zinc-500 text-xs font-bold">강한 콜옵션 우세. 만기일 전후 변동성 주의. 눌림목 매수 타점.</p>
+        </div>
+    
+        <div class="bg-[#1a1a1a] p-4 rounded-xl border border-zinc-800">
+            <div class="flex justify-between mb-2">
+                <span class="text-white font-black">BTC</span>
+                <span class="text-accent text-xs font-bold">MAX PAIN: 65k</span>
+            </div>
+            <p class="text-zinc-500 text-xs font-bold">옵션 시장 유동성 역대급. 세력들 하단 62k 강력 지지 중. 홀딩 전략.</p>
+        </div>
+    </div>
+        </div>
+
         <script>
-            const allHistory = {"^KS11": [4904.66, 4885.75, 4909.93, 4952.53, 4990.07, 4949.59, 5084.85, 5170.81, 5221.25, 5224.36, 4949.67, 5288.08, 5371.1, 5163.57, 5089.14, 5298.04, 5301.69, 5354.49, 5522.27, 5507.01, 5677.25, 5808.53, 5846.09, 5969.64, 6083.86, 6307.27, 6244.13, 5791.91, 5093.54, 5619.62], "^IXIC": [23224.82, 23436.02, 23501.24, 23601.36, 23817.1, 23857.45, 23685.12, 23461.82, 23592.11, 23255.19, 22904.58, 22540.59, 23031.21, 23238.67, 23102.47, 23066.47, 22597.15, 22546.67, 22578.38, 22753.63, 22682.73, 22886.07, 22627.27, 22863.68, 23152.08, 22878.38, 22668.21, 22748.86, 22516.69, 22807.48], "^GSPC": [6875.62, 6913.35, 6915.61, 6950.23, 6978.6, 6978.03, 6969.01, 6939.03, 6976.44, 6917.81, 6882.72, 6798.4, 6932.3, 6964.82, 6941.81, 6941.47, 6832.76, 6836.17, 6843.22, 6881.31, 6861.89, 6909.51, 6837.75, 6890.07, 6946.13, 6908.86, 6878.88, 6881.62, 6816.63, 6869.5], "^VIX": [15.64, 16.09, 16.15, 16.35, 16.35, 16.88, 17.44, 16.34, 18.0, 18.64, 21.77, 20.37, 17.36, 17.79, 17.65, 20.82, 20.6, 20.29, 19.62, 20.23, 19.09, 21.01, 19.55, 17.93, 18.63, 19.86, 21.44, 23.57, 21.15], "BTC-USD": [73019.7, 62702.1, 70555.39, 69281.97, 70264.73, 70120.78, 68793.96, 66991.97, 66221.84, 68857.84, 69767.62, 68788.19, 68843.16, 67494.22, 66425.32, 66957.52, 68005.42, 68003.77, 67659.39, 64616.74, 64080.04, 67960.12, 67453.77, 65881.8, 66995.86, 65738.1, 68775.85, 68293.65, 72322.57], "GC=F": [5318.4, 4713.9, 4622.5, 4903.7, 4920.4, 4861.4, 4951.2, 5050.9, 5003.8, 5071.6, 4923.7, 5022.0, 4882.9, 4986.5, 4975.9, 5059.3, 5204.7, 5155.8, 5206.4, 5176.5, 5230.5, 5294.4, 5107.4, 5120.2, 5141.1], "CL=F": [65.42, 65.21, 62.14, 63.21, 65.14, 63.29, 63.55, 64.36, 63.96, 64.63, 62.84, 62.89, 62.33, 65.19, 66.43, 66.39, 66.31, 65.63, 65.42, 65.21, 67.02, 71.23, 74.56, 74.66, 77.48], "SOXX": [348.14, 348.67, 344.71, 343.07, 351.08, 360.46, 361.13, 346.3, 352.69, 345.64, 330.38, 330.83, 348.51, 352.77, 351.43, 360.2, 351.5, 354.66, 354.1, 357.92, 355.84, 359.43, 356.82, 362.04, 368.0, 356.8, 352.29, 352.05, 334.78, 341.54], "XBI": [128.18, 131.57, 128.04, 127.86, 128.53, 125.94, 126.74, 124.75, 127.35, 127.65, 125.29, 120.72, 125.51, 126.11, 125.34, 124.65, 123.18, 122.86, 124.63, 125.6, 126.74, 124.78, 126.97, 129.16, 128.28, 127.67, 127.37, 126.55, 123.5, 126.42], "XLF": [53.46, 53.81, 53.07, 53.41, 53.0, 52.99, 53.55, 53.44, 54.03, 53.53, 53.96, 53.29, 54.26, 53.94, 53.55, 52.74, 51.69, 51.65, 52.2, 52.59, 52.15, 52.49, 50.73, 50.98, 51.87, 52.5, 51.43, 51.3, 51.21, 51.5]};
-            function showMiniChart(sym) {
+            const allHistory = {"^KS11": [4904.66, 4885.75, 4909.93, 4952.53, 4990.07, 4949.59, 5084.85, 5170.81, 5221.25, 5224.36, 4949.67, 5288.08, 5371.1, 5163.57, 5089.14, 5298.04, 5301.69, 5354.49, 5522.27, 5507.01, 5677.25, 5808.53, 5846.09, 5969.64, 6083.86, 6307.27, 6244.13, 5791.91, 5093.54, 5591.54], "^IXIC": [23224.82, 23436.02, 23501.24, 23601.36, 23817.1, 23857.45, 23685.12, 23461.82, 23592.11, 23255.19, 22904.58, 22540.59, 23031.21, 23238.67, 23102.47, 23066.47, 22597.15, 22546.67, 22578.38, 22753.63, 22682.73, 22886.07, 22627.27, 22863.68, 23152.08, 22878.38, 22668.21, 22748.86, 22516.69, 22807.48], "^GSPC": [6875.62, 6913.35, 6915.61, 6950.23, 6978.6, 6978.03, 6969.01, 6939.03, 6976.44, 6917.81, 6882.72, 6798.4, 6932.3, 6964.82, 6941.81, 6941.47, 6832.76, 6836.17, 6843.22, 6881.31, 6861.89, 6909.51, 6837.75, 6890.07, 6946.13, 6908.86, 6878.88, 6881.62, 6816.63, 6869.5], "^VIX": [16.9, 15.64, 16.09, 16.15, 16.35, 16.35, 16.88, 17.44, 16.34, 18.0, 18.64, 21.77, 20.37, 17.36, 17.79, 17.65, 20.82, 20.6, 20.29, 19.62, 20.23, 19.09, 21.01, 19.55, 17.93, 18.63, 19.86, 21.44, 23.57, 21.15], "BTC-USD": [73019.7, 62702.1, 70555.39, 69281.97, 70264.73, 70120.78, 68793.96, 66991.97, 66221.84, 68857.84, 69767.62, 68788.19, 68843.16, 67494.22, 66425.32, 66957.52, 68005.42, 68003.77, 67659.39, 64616.74, 64080.04, 67960.12, 67453.77, 65881.8, 66995.86, 65738.1, 68775.85, 68293.65, 72710.58, 72373.27], "GC=F": [5318.4, 4713.9, 4622.5, 4903.7, 4920.4, 4861.4, 4951.2, 5050.9, 5003.8, 5071.6, 4923.7, 5022.0, 4882.9, 4986.5, 4975.9, 5059.3, 5204.7, 5155.8, 5206.4, 5176.5, 5230.5, 5294.4, 5107.4, 5120.2, 5145.0], "CL=F": [65.42, 65.21, 62.14, 63.21, 65.14, 63.29, 63.55, 64.36, 63.96, 64.63, 62.84, 62.89, 62.33, 65.19, 66.43, 66.39, 66.31, 65.63, 65.42, 65.21, 67.02, 71.23, 74.56, 74.66, 77.65], "TQQQ": [52.73, 53.9, 54.38, 55.08, 56.54, 57.06, 56.04, 54.0, 55.1, 52.52, 49.76, 47.64, 50.59, 51.74, 51.02, 51.4, 48.26, 48.47, 48.35, 49.39, 48.83, 50.06, 48.24, 49.78, 51.87, 50.05, 49.52, 49.7, 48.1, 50.26], "SOXL": [63.48, 63.72, 61.6, 60.7, 64.96, 70.09, 70.47, 61.79, 65.2, 61.2, 53.19, 53.25, 61.75, 64.03, 63.34, 68.05, 63.1, 64.59, 64.35, 66.29, 65.23, 67.11, 65.86, 68.53, 71.86, 65.34, 62.77, 62.76, 53.42, 56.62], "NVDA": [183.32, 184.84, 187.67, 186.47, 188.52, 191.52, 192.51, 191.13, 185.61, 180.34, 174.19, 171.88, 185.41, 190.04, 188.54, 190.05, 186.94, 182.81, 184.97, 187.98, 187.9, 189.82, 191.55, 192.85, 195.56, 184.89, 177.19, 182.48, 180.05, 183.04], "MSTR": [163.81, 160.98, 163.11, 160.58, 161.58, 158.45, 143.19, 149.71, 139.63, 133.26, 129.09, 106.99, 134.93, 138.44, 133.0, 126.07, 123.0, 133.88, 128.67, 125.2, 129.45, 131.05, 123.71, 124.61, 135.65, 133.4, 129.5, 137.65, 132.68, 146.44], "TSLA": [431.44, 449.36, 449.06, 435.2, 430.9, 431.46, 416.56, 430.41, 421.81, 421.96, 406.01, 397.21, 411.11, 417.32, 425.21, 428.27, 417.07, 417.44, 410.63, 411.32, 411.71, 411.82, 399.83, 409.38, 417.4, 408.58, 402.51, 403.32, 392.43, 405.94], "SOXX": [348.14, 348.67, 344.71, 343.07, 351.08, 360.46, 361.13, 346.3, 352.69, 345.64, 330.38, 330.83, 348.51, 352.77, 351.43, 360.2, 351.5, 354.66, 354.1, 357.92, 355.84, 359.43, 356.82, 362.04, 368.0, 356.8, 352.29, 352.05, 334.78, 341.54], "XBI": [128.18, 131.57, 128.04, 127.86, 128.53, 125.94, 126.74, 124.75, 127.35, 127.65, 125.29, 120.72, 125.51, 126.11, 125.34, 124.65, 123.18, 122.86, 124.63, 125.6, 126.74, 124.78, 126.97, 129.16, 128.28, 127.67, 127.37, 126.55, 123.5, 126.42], "XLF": [53.46, 53.81, 53.07, 53.41, 53.0, 52.99, 53.55, 53.44, 54.03, 53.53, 53.96, 53.29, 54.26, 53.94, 53.55, 52.74, 51.69, 51.65, 52.2, 52.59, 52.15, 52.49, 50.73, 50.98, 51.87, 52.5, 51.43, 51.3, 51.21, 51.5], "XLV": [158.26, 158.29, 157.48, 158.1, 155.45, 154.31, 153.82, 154.74, 155.69, 154.1, 156.03, 154.84, 157.71, 156.32, 155.33, 156.25, 156.0, 157.67, 157.37, 157.67, 157.26, 156.82, 158.54, 157.87, 157.83, 157.42, 160.2, 158.53, 156.74, 157.05], "XLE": [48.75, 48.91, 49.19, 49.22, 49.67, 50.05, 50.51, 51.05, 50.05, 51.67, 52.83, 52.21, 53.25, 53.64, 53.58, 54.98, 53.98, 54.35, 53.75, 54.78, 55.18, 54.88, 55.15, 55.1, 54.87, 55.05, 55.92, 57.04, 56.52, 56.19]};
+            function showChart(sym) {
                 const container = document.getElementById('chart-' + sym);
+                if(!container) return;
                 const chart = echarts.init(container);
                 chart.setOption({
-                    grid: { top: 5, bottom: 5, left: 5, right: 5 },
+                    grid: { top: 10, bottom: 10, left: 10, right: 10 },
                     xAxis: { type: 'category', show: false },
                     yAxis: { type: 'value', show: false, min: 'dataMin', max: 'dataMax' },
-                    series: [{ data: allHistory[sym], type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#D4AF37', width: 2 }, areaStyle: { color: 'rgba(212, 175, 55, 0.1)' } }]
+                    series: [{
+                        data: allHistory[sym],
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        lineStyle: { color: '#D4AF37', width: 2 },
+                        areaStyle: { color: 'rgba(212, 175, 55, 0.1)' }
+                    }]
                 });
             }
         </script>
