@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 깃허브가 스스로 파일을 수정할 수 있도록 허락(프리패스)하는 핵심 코드!
+      contents: write # 이 줄이 마스터키를 사용하는 핵심입니다!
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -19,5 +19,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Automated report update" || true
+          git commit -m "Automated update" || true
           git push origin main
