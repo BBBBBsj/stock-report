@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 증권팀 데일리 리포트 - 2026-03-05</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Pretendard', sans-serif; }
+        .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; padding: 1.5rem; }
+        .status-pill { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; }
+        .bullish { color: #10b981; border: 1px solid #10b981; }
+        .bearish { color: #ef4444; border: 1px solid #ef4444; }
+        .neutral { color: #94a3b8; border: 1px solid #94a3b8; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-700 pb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-blue-400">AI Securities Team <span class="text-slate-500 text-xl font-normal">| Institutional Dashboard</span></h1>
+                <p class="text-slate-400 mt-1">Date: 2026-03-05 (Thursday) | Market Status: <span class="text-red-400">Risk-Off</span></p>
+            </div>
+            <div class="mt-4 md:mt-0 flex gap-4">
+                <div class="text-right">
+                    <p class="text-xs text-slate-500">Portfolio Status</p>
+                    <p class="text-xl font-mono font-bold text-emerald-400">CASH 100%</p>
+                </div>
+                <div class="text-right border-l border-slate-700 pl-4">
+                    <p class="text-xs text-slate-500">Fear & Greed</p>
+                    <p class="text-xl font-mono font-bold text-orange-400">22 (Extreme Fear)</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Macro & Strategy -->
+            <div class="card md:col-span-2">
+                <h2 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-globe-americas mr-2 text-blue-400"></i> Macro & Strategy Desk</h2>
+                <div class="space-y-4">
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <h3 class="font-bold text-slate-200 text-lg">Trump 2.0 & Geopolitics</h3>
+                        <p class="text-slate-400 text-sm mt-1">15% 보편적 관세 및 중동 전쟁 장기화에 따른 인플레이션 재점화 가능성. 연준 금리 인하 기대감 축소(3회 -> 1회).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Analysis -->
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-chart-line mr-2 text-emerald-400"></i> Technical Analysis</h2>
+                <ul class="text-sm space-y-3">
+                    <li class="flex justify-between"><span>S&P 500 Support</span> <span class="font-mono text-emerald-400">6,730</span></li>
+                    <li class="flex justify-between"><span>RSI Divergence</span> <span class="text-orange-400">Bullish Hint</span></li>
+                    <li class="flex justify-between"><span>Trend</span> <span class="text-red-400 italic font-bold">Bearish Channel</span></li>
+                </ul>
+                <div class="mt-4 pt-4 border-t border-slate-700">
+                    <p class="text-xs text-slate-500 font-bold uppercase mb-2">Alpha Signal</p>
+                    <p class="text-sm">하락 평행 채널 상단 돌파 전까지 확인 매수 금지.</p>
+                </div>
+            </div>
+
+            <!-- Options & Derivatives -->
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-layer-group mr-2 text-purple-400"></i> Derivatives (Opus)</h2>
+                <div class="text-sm space-y-3">
+                    <div class="bg-slate-900/50 p-2 rounded">
+                        <p class="text-xs text-slate-500 mb-1">Max Pain Level</p>
+                        <p class="text-lg font-mono font-bold">$675 (SPY)</p>
+                    </div>
+                    <p class="text-slate-400">현재 <span class="text-red-400 font-bold">Negative Gamma</span> 구간. 변동성 확대 주의.</p>
+                </div>
+            </div>
+
+            <!-- Sector Alpha (SAR) -->
+            <div class="card md:col-span-2">
+                <h2 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-microchip mr-2 text-yellow-400"></i> Sector Alpha Research</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="p-3 bg-slate-900/50 rounded text-center">
+                        <p class="text-xs text-slate-500">Tech</p>
+                        <span class="status-pill bearish block mt-1">BEAR</span>
+                    </div>
+                    <div class="p-3 bg-slate-900/50 rounded text-center border border-emerald-500/30">
+                        <p class="text-xs text-slate-500">Energy</p>
+                        <span class="status-pill bullish block mt-1">BULL</span>
+                    </div>
+                    <div class="p-3 bg-slate-900/50 rounded text-center border border-emerald-500/30">
+                        <p class="text-xs text-slate-500">Defense</p>
+                        <span class="status-pill bullish block mt-1">BULL</span>
+                    </div>
+                    <div class="p-3 bg-slate-900/50 rounded text-center">
+                        <p class="text-xs text-slate-500">Crypto</p>
+                        <span class="status-pill neutral block mt-1">WAIT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Behavioral Psychology -->
+            <div class="card md:col-span-3">
+                <h2 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-brain mr-2 text-pink-400"></i> Behavioral Sentiment (Psyche)</h2>
+                <p class="text-slate-400 text-sm">개미들의 비명 소리가 잦아들고 무력감이 감도는 '침묵의 공포' 단계. 통계적으로 바닥권에 근접했으나, 마지막 '항복(Capitulation)' 투매를 기다려야 하는 시점.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-slate-600 text-xs py-8">
+            <p>© 2026 AI Securities Team Dashboard. For Private Investment Support Only.</p>
+        </footer>
+    </div>
+</body>
+</html>
